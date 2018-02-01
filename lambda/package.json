@@ -1,0 +1,22 @@
+{
+  "name": "upcoming",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel-node index.js",
+    "build": "rm -rf dist && mkdir dist && cp -R node_modules dist/node_modules && babel *.js --out-dir dist/ && cd dist && zip -r index.zip *"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.17.1",
+    "cheerio": "^1.0.0-rc.2",
+    "moment": "^2.20.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.1"
+  }
+}
