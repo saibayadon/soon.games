@@ -4,8 +4,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #1B1D1C;
-    color: #EA1821;
     height: 100vh;
     font-family: Avenir, Helvetica, sans-serif;
     text-transform: uppercase;
@@ -14,4 +12,8 @@ body {
 
 h1 {
     text-align: center;
+}
+
+.feck {
+  color: #EA1821;
 }
