@@ -24,7 +24,7 @@ const parseResponse = (response) => {
   if (response.status !== 200) throw new Error('NOT OK')
   const $ = cheerio.load(response.data)
 
-  let titles = $('.list_product_summaries .product').map((i, el) => {
+  let titles = $('#main .list_product_summaries .product').map((i, el) => {
     // Title
     const title = $(el).find('h3 a').text()
 
