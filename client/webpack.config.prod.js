@@ -14,7 +14,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 var config = {
     entry: {
         main: mainPath,
-        vendor: ['react', 'react-dom']
+        vendor: ['babel-polyfill', 'react', 'react-dom']
     },
     output: {
         path: buildPath,
