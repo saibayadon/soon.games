@@ -54,6 +54,10 @@ export default class ListContainer extends Component {
         const { platform: currentPlatform, type: currentType } = this.props.match.params;
 
         if (platform !== currentPlatform || type !== currentType) {
+            // Save route as default for subsequent visits.
+            window.localStorage.setItem('defaultRoute', `/${platform}/${type}`);
+
+            // Re-fetch data.
             if (PLATFORMS.hasOwnProperty(platform) && TYPE.hasOwnProperty(type)) {
                 this.fetchGameList(platform, type);
             }

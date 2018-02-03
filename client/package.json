@@ -1,9 +1,8 @@
 {
-  "name": "kitsune",
-  "version": "0.2.0",
-  "description": "React boilerplate. Sly as a fox.",
+  "name": "upcoming",
+  "version": "0.1.0",
+  "description": "Upcoming game releases.",
   "scripts": {
-    "dashboard": "webpack-dashboard -- npm run start",
     "start": "mkdir -p build && rm -rf build/* && cp -R public/* build && rm build/index.html && webpack-dev-server --config webpack.config.dev.js --open",
     "build": "mkdir -p build && rm -rf build/* && cp -R public/* build && rm build/index.html && NODE_ENV=production webpack --config webpack.config.prod.js --progress"
   },
@@ -14,6 +13,8 @@
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.1",
     "babel-loader": "^7.1.2",
+    "babel-plugin-dynamic-import-webpack": "^1.0.2",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.23.0",
     "caniuse-lite": "^1.0.30000697",
@@ -32,17 +33,19 @@
     "style-loader": "^0.19.1",
     "url-loader": "^0.6.2",
     "webpack": "^3.10.0",
-    "webpack-dashboard": "^1.0.2",
     "webpack-dev-server": "2.11.0"
   },
   "dependencies": {
     "axios": "^0.17.1",
-    "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.5",
-    "moment": "^2.20.1",
+    "date-fns": "^2.0.0-alpha.7",
     "normalize.css": "^7.0.0",
+    "preact": "^8.2.7",
+    "preact-compat": "^3.18.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-router-dom": "^4.0.0"
+    "react-loadable": "^5.3.1",
+    "react-router-dom": "^4.0.0",
+    "webpack-bundle-analyzer": "^2.10.0"
   }
 }

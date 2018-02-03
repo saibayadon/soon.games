@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import { parse, formatDistanceStrict, endOfDay } from 'date-fns';
 
 // Styles
 import styles from '../css/app.css';
@@ -8,7 +8,7 @@ import styles from '../css/app.css';
 const ListItem = (props) => {
     const { title, link, date, thumbnail } = props;
 
-    const parsedDate = moment(date, 'X').endOf('day').fromNow();
+    const parsedDate = formatDistanceStrict(endOfDay(parse(date, 'X', new Date())), new Date());
     const metacritic = link;
     const youtube = `https://www.youtube.com/results?search_query=${title} trailer`;
 

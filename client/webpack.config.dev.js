@@ -8,9 +8,14 @@ const mainPath = resolve(__dirname, 'src', 'index.js');
 
 // Webpack Plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const DashboardPlugin = require('webpack-dashboard/plugin');
 
 var config = {
+    resolve: {
+        alias: {
+            'react': 'preact-compat',
+            'react-dom': 'preact-compat'
+        }
+    },
     entry: [
         'webpack-dev-server/client?http://localhost:8080/',
         'webpack/hot/only-dev-server',
@@ -68,7 +73,6 @@ var config = {
         ]
     },
     plugins: [
-        new DashboardPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin(),
         new webpack.DefinePlugin({

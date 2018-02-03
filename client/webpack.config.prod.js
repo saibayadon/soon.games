@@ -10,11 +10,18 @@ const mainPath = path.resolve(__dirname, 'src', 'index.js');
 // Webpack Plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 var config = {
+    resolve: {
+        alias: {
+            'react': 'preact-compat',
+            'react-dom': 'preact-compat'
+        }
+    },
     entry: {
         main: mainPath,
-        vendor: ['babel-polyfill', 'react', 'react-dom']
+        vendor: ['babel-polyfill', 'react', 'react-dom', 'date-fns', 'axios']
     },
     output: {
         path: buildPath,
@@ -44,6 +51,7 @@ var config = {
         ]
     },
     plugins: [
+        new BundleAnalyzerPlugin(),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         }),
@@ -68,6 +76,7 @@ var config = {
         new HtmlWebpackPlugin({
             inject: true,
             template: './public/index.html',
+            filename: 'index.[chunkhash:8].html',
             minify: {
                 removeComments: true,
                 collapseWhitespace: true,

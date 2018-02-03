@@ -41,10 +41,10 @@ const parseResponse = (response) => {
     return {title, date, link, thumbnail}
   })
 
-  return titles.get().sort((a, b) => a.date - b.date) // Return items sorted by date
+  return titles.get()
 }
 
 export const getGames = async (platform = PLATFORMS.SWITCH, type = TYPE.COMING_SOON) => {
-  let response = await axios.get(getBaseUrl(platform, type))
-  return parseResponse(response)
+  let games = await axios.get(getBaseUrl(platform, type))
+  return parseResponse(games)
 }
