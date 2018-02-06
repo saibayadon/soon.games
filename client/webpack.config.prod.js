@@ -21,7 +21,7 @@ var config = {
     },
     entry: {
         main: mainPath,
-        vendor: ['babel-polyfill', 'react', 'react-dom', 'date-fns', 'axios']
+        vendor: ['react', 'react-dom', 'date-fns', 'axios']
     },
     output: {
         path: buildPath,
