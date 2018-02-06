@@ -68,7 +68,12 @@ export default class ListContainer extends Component {
         try {
             this.setState({ items: [], isFetching: true });
             const response = await axios.get(`${API_URL}?platform=${platform.toUpperCase()}&type=${type.toUpperCase()}`);
-            this.setState({ items: response.data, error: null, isFetching: false });
+
+            // Sort items
+            const items = response.data.sort((a, b) => a.date - b.date);
+
+            // Set State
+            this.setState({ items: type === 'new' ? items.reverse() : items, error: null, isFetching: false });
         } catch (e) {
             this.setState({ items: [], error: e, isFetching: false });
         }

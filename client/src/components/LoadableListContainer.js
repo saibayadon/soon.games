@@ -8,6 +8,7 @@ import styles from '../css/app.css';
 const LoadableListContainer = Loadable({
   loader: () => import('./ListContainer'),
   loading: () => <p className={styles.loading}> Loading... </p>,
+  delay: 300
 });
 
 export default LoadableListContainer;
