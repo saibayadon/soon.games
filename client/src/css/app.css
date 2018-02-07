@@ -44,8 +44,8 @@ a:hover, a:active, a.selected {
     }
 }
 
-/* error and loading */
-p.error, p.loading {
+/* error and loading and footer */
+p.error, p.loading, footer p {
     margin: 6px 0;
     padding: 4px 0;
     font-family: monospace;
@@ -54,11 +54,25 @@ p.error, p.loading {
 p.error {
     color: #e74c3c;
 }
+footer p, .wrapper footer a {
+    font-weight: normal;
+    color: #cfcfcf;
+}
+
+/* footer & wrapper */
+.wrapper {
+    display: flex;
+    min-height: calc(100vh - 4vh);
+    flex-direction: column;
+}
+.list {
+    flex: 1;
+}
 
 /* title styles */
 .title {
     position: relative;
-    display: inline-block;
+    align-self: self-end;
     font-family: 'Open Sans', sans-serif;
     font-size: 42px;
 

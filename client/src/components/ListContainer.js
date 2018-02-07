@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import classNames from 'classNames';
+import { parse, isBefore } from 'date-fns';
 
 // Actions Import
 import { updateItems, isLoading, hasError } from '../actions';
@@ -17,7 +18,7 @@ import List from './List';
 import DocumentTitle from './DocumentTitle';
 
 // Constants
-const API_URL = 'https://jl1g3l3td5.execute-api.us-east-1.amazonaws.com/prod';
+const API_URL = 'https://api.soon.games';
 
 export const PLATFORMS = {
     'switch': 'SWITCH',
@@ -69,9 +70,18 @@ class ListContainer extends Component {
     async fetchGameList(platform, type) {
         try {
             this.props.dispatch(isLoading());
+
             const response = await axios.get(`${API_URL}?platform=${platform.toUpperCase()}&type=${type.toUpperCase()}`);
-            const items = response.data.sort((a, b) => a.date - b.date);
-            this.props.dispatch(updateItems(items));
+            let items = response.data.sort((a, b) => a.date - b.date);
+
+            // Return only "old" games on the new releases section
+            if (type === 'new') {
+                items = items.filter((game) => {
+                    return isBefore(parse(game.date, 'X', new Date()), new Date());
+                });
+            };
+
+            this.props.dispatch(updateItems(type === 'new' ? items.reverse() : items));
         } catch (e) {
             this.props.dispatch(hasError(e));
         }
@@ -84,13 +94,16 @@ class ListContainer extends Component {
         const sectionInfo = `${PLATFORMS[platform]} - ${TYPE[type]}`;
 
         return (
-            <div className={styles[platform.replace('3ds', 'threeds')]}>
+            <div className={classNames(styles[platform.replace('3ds', 'threeds')], styles.wrapper)}>
                 <DocumentTitle title={sectionInfo} />
                 <Nav platforms={PLATFORMS} types={TYPE} />
                 <h1 className={styles.title}>{sectionInfo}</h1>
                 {isFetching ? <p className={styles.loading}> Loading... </p> : null}
                 {error ? <p className={styles.error}> {error} </p> : null}
                 <List items={items} />
+                <footer>
+                    <p>all information is scraped (and cached) from <a target="_blank" href="http://metacritic.com">metacritic</a>.</p>
+                </footer>
             </div>
         );
     }

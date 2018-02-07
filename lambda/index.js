@@ -1,34 +1,35 @@
 // Requires
 import { PLATFORMS, TYPE, getGames } from './scraper';
 import moment from 'moment';
-
-// In-memory cache (Useful for burst of multiple requests when the lambda instance is still hot)
-const cache = {date: moment(), data: new Map()};
+import cache from './cache';
 
 // Handler
 export const scrape = async (event = {}, context = {}, callback = () => {}) => {
-  // Generate the chache key + parameters for the scraper.
-  let platform = (event && event.queryStringParameters) ? PLATFORMS[event.queryStringParameters.platform || "SWITCH"] : PLATFORMS.SWITCH;
-  let type = (event && event.queryStringParameters) ? TYPE[event.queryStringParameters.type || "NEW"] : TYPE.NEW;
-  let key = `${platform}-${type}`;
+    // Generate the chache key + parameters for the scraper.
+    let platform = (event && event.queryStringParameters) ? (PLATFORMS[event.queryStringParameters.platform || "SWITCH"] || "switch") : PLATFORMS.SWITCH;
+    let type = (event && event.queryStringParameters) ? (TYPE[event.queryStringParameters.type || "NEW"] || "new-releases") : TYPE.NEW;
+    let key = `${platform}-${type}`;
 
-  // Check cache. Invalidate if it's older than 1 day or data is not there.
-  if (cache.date.isBefore(cache.date.clone().add(1, 'days')) && cache.data.has(key)) {
-    console.log(`${cache.date.format('X')}: Retrieved ${key} from cache.`);
-    callback(null, {"statusCode": 200, "body": JSON.stringify(cache.data.get(key)), "headers": {"Access-Control-Allow-Origin": "*"}});
-  } else {
-    try {
-      // Get the data
-      let games = await getGames(platform, type);
+    // Get the cache data, if any.
+    let cacheData = cache.get(key);
 
-      // Store cache + log.
-      cache.data.set(key, games);
-      console.log(`${cache.date.format('X')}: Retrieved ${key} from network.`);
+    // Check cache. Invalidate if it's older than 1 day or data is not there.
+    if (cacheData && moment().isBefore(moment(cacheData.date, 'X').add(12, 'hours')) && cacheData.data) {
+        console.log(`Retrieved ${key} from cache.`);
+        callback(null, {"statusCode": 200, "body": JSON.stringify(cacheData.data), "headers": {"Access-Control-Allow-Origin": "*"}});
+    } else {
+        try {
+            // Get the data
+            let games = await getGames(platform, type);
 
-      // Return
-      callback(null, {"statusCode": 200, "body": JSON.stringify(games), "headers": {"Access-Control-Allow-Origin": "*"}});
-    } catch (e) {
-      callback(null, {"statusCode": 500, "body": e.message, "headers": {"Access-Control-Allow-Origin": "*"}});
+            // Store cache + log.
+            cache.set(key, games)
+            console.log(`Retrieved ${key} from network.`);
+
+            // Return
+            callback(null, {"statusCode": 200, "body": JSON.stringify(games), "headers": {"Access-Control-Allow-Origin": "*"}});
+        } catch (e) {
+            callback(null, {"statusCode": 500, "body": e.message, "headers": {"Access-Control-Allow-Origin": "*"}});
+        }
     }
-  }
 };

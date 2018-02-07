@@ -14,7 +14,7 @@ const ListItem = (props) => {
 
     return (
         <li>
-            <span className={styles['game-title']}>{title}</span> <span className={styles.highlight}>{parsedDate}</span> - <a target="_blank" href={metacritic}>metacritic</a> / <a target="_blank" href={youtube}>youtube</a>
+            <span className={styles['game-title']}>{title}</span> <span className={styles.highlight}>{parsedDate}</span> - <a target="_blank" href={metacritic}>info</a> / <a target="_blank" href={youtube}>youtube</a>
         </li>
     );
 };
