@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import axios from 'axios';
+import axios, { CancelToken } from 'axios';
 import classNames from 'classNames';
 import { parse, isBefore } from 'date-fns';
 
@@ -69,9 +69,18 @@ class ListContainer extends Component {
 
     async fetchGameList(platform, type) {
         try {
+
+            if (this.props.isFetching === true) {
+                const { platform, type } = this.props.match.params;
+                this.cancelFetch();
+            };
+
             this.props.dispatch(isLoading());
 
-            const response = await axios.get(`${API_URL}?platform=${platform.toUpperCase()}&type=${type.toUpperCase()}`);
+            const response = await axios.get(`${API_URL}?platform=${platform.toUpperCase()}&type=${type.toUpperCase()}`, {
+                cancelToken: new CancelToken((source) => { this.cancelFetch = source; })
+            });
+
             let items = response.data.sort((a, b) => a.date - b.date);
 
             // Return only "old" games on the new releases section
@@ -83,6 +92,7 @@ class ListContainer extends Component {
 
             this.props.dispatch(updateItems(type === 'new' ? items.reverse() : items));
         } catch (e) {
+            if (axios.isCancel(e)) return;
             this.props.dispatch(hasError(e));
         }
     }
