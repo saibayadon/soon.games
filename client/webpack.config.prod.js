@@ -13,12 +13,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 var config = {
-    resolve: {
-        alias: {
-            'react': 'preact-compat',
-            'react-dom': 'preact-compat'
-        }
-    },
     entry: {
         main: mainPath,
         vendor: ['react', 'react-dom', 'date-fns', 'axios']

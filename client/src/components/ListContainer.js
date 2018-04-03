@@ -50,10 +50,11 @@ class ListContainer extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        const { dispatch } = nextProps;
-        const { platform, type } = nextProps.match.params;
-        const { platform: currentPlatform, type: currentType } = this.props.match.params;
+    componentDidUpdate(prevProps) {
+        const { dispatch } = prevProps;
+        const { platform: currentPlatform, type: currentType } = prevProps.match.params;
+        const { platform, type } = this.props.match.params;
+
 
         if (platform !== currentPlatform || type !== currentType) {
             // Save route as default for subsequent visits.
@@ -66,10 +67,8 @@ class ListContainer extends Component {
         }
     }
 
-
     async fetchGameList(platform, type) {
         try {
-
             if (this.props.isFetching === true) {
                 const { platform, type } = this.props.match.params;
                 this.cancelFetch();
@@ -86,13 +85,13 @@ class ListContainer extends Component {
             // Return only "old" games on the new releases section
             if (type === 'new') {
                 items = items.filter((game) => {
-                    return isBefore(parse(game.date, 'X', new Date()), new Date());
+                    return isBefore(parse(game.date, 'X', new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })), new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
                 });
             };
 
             this.props.dispatch(updateItems(type === 'new' ? items.reverse() : items));
         } catch (e) {
-            if (axios.isCancel(e)) return;
+            if (axios.isCancel(e)) { return; }
             this.props.dispatch(hasError(e));
         }
     }
@@ -112,7 +111,7 @@ class ListContainer extends Component {
                 {error ? <p className={styles.error}> {error} </p> : null}
                 <List items={items} />
                 <footer>
-                    <p>all information is scraped (and cached) from <a target="_blank" href="http://metacritic.com">metacritic</a>.</p>
+                    <p>all times shown are EST - all information is scraped (and cached) from <a target="_blank" href="http://metacritic.com">metacritic</a>.</p>
                 </footer>
             </div>
         );
@@ -128,10 +127,10 @@ ListContainer.propTypes = {
     dispatch: PropTypes.func.isRequired
 };
 
-// Map State to Props
-const mapStateToProps = state => {
+// Map Store State to Props
+const mapStoreToProps = state => {
     return { items: state.items, isFetching: state.isFetching, error: state.error };
 };
 
 // Connect + Export
-export default connect(mapStateToProps)(ListContainer);
+export default connect(mapStoreToProps)(ListContainer);

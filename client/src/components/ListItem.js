@@ -8,7 +8,7 @@ import styles from '../css/app.css';
 const ListItem = (props) => {
     const { title, link, date, thumbnail } = props;
 
-    const parsedDate = formatDistanceStrict(endOfDay(parse(date, 'X', new Date())), new Date(), { addSuffix: true });
+    const parsedDate = formatDistanceStrict(endOfDay(parse(date, 'X', new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }))), new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }), { addSuffix: true });
     const metacritic = link;
     const youtube = `https://www.youtube.com/results?search_query=${title} trailer`;
 

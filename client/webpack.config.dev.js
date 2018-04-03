@@ -10,12 +10,6 @@ const mainPath = resolve(__dirname, 'src', 'index.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var config = {
-    resolve: {
-        alias: {
-            'react': 'preact-compat',
-            'react-dom': 'preact-compat'
-        }
-    },
     entry: [
         'webpack-dev-server/client?http://localhost:8080/',
         'webpack/hot/only-dev-server',
