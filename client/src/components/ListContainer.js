@@ -108,10 +108,10 @@ class ListContainer extends Component {
                 <Nav platforms={PLATFORMS} types={TYPE} />
                 <h1 className={styles.title}>{sectionInfo}</h1>
                 {isFetching ? <p className={styles.loading}> Loading... </p> : null}
-                {error ? <p className={styles.error}> {error} </p> : null}
+                {error ? <p className={styles.error}> Thank You Mario, But Our Princess is in Another Castle ({error.message}) </p> : null}
                 <List items={items} />
                 <footer>
-                    <p>all times shown are EST - all information is scraped (and cached) from <a target="_blank" href="http://metacritic.com">metacritic</a>.</p>
+                    <p>all times shown are est - all information is scraped from <a target="_blank" href="http://metacritic.com">metacritic</a>.</p>
                 </footer>
             </div>
         );
