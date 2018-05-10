@@ -77,7 +77,9 @@ const config = {
     }),
     new HtmlWebpackPlugin({ inject: true, template: './public/index.html' }),
     new OfflinePlugin({
+      appShell: '/',
       externals: [
+        '/',
         'https://api.soon.games/?platform=SWITCH&type=NEW',
         'https://api.soon.games/?platform=SWITCH&type=NEW',
         'https://api.soon.games/?platform=PS4&type=NEW',

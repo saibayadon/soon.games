@@ -92,7 +92,9 @@ const config = {
     }),
     new ExtractTextPlugin('css/styles.css'),
     new OfflinePlugin({
+      appShell: '/',
       externals: [
+        '/',
         'https://api.soon.games/?platform=SWITCH&type=NEW',
         'https://api.soon.games/?platform=SWITCH&type=NEW',
         'https://api.soon.games/?platform=PS4&type=NEW',
