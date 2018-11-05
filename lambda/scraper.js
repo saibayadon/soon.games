@@ -22,18 +22,18 @@ const getBaseUrl = (platform, type) => `https://www.metacritic.com/browse/games/
 
 const parseResponse = (response) => {
     if (response.status !== 200) throw new Error('NOT OK')
-        const $ = cheerio.load(response.data);
+    const $ = cheerio.load(response.data);
 
-        let titles = $('#main .list_product_summaries .product').map((i, el) => {
+    let titles = $('#main .browse_list_wrapper .clamp-summary-wrap').map((i, el) => {
         // Title
-        const title = $(el).find('h3 a').text();
+        const title = $(el).find('h3').text().trim();
 
         // Date
-        const date_str = $(el).find('.release_date .data').text();
+        const date_str = $(el).find('.clamp-details span').eq(1).text();
         const date = moment.utc(date_str, "MMM Do, YYYY").unix();
 
         // Game URL
-        const link = `https://www.metacritic.com${$(el).find('h3 a').attr('href')}`;
+        const link = `https://www.metacritic.com${$(el).find('a.title').attr('href')}`;
 
         return { title, date, link };
     })
