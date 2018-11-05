@@ -7,7 +7,7 @@ import cache from './cache';
 export const scrape = async (event = {}, context = {}, callback = () => {}) => {
     // Generate the chache key + parameters for the scraper.
     let platform = (event && event.queryStringParameters) ? (PLATFORMS[event.queryStringParameters.platform || "SWITCH"] || "switch") : PLATFORMS.SWITCH;
-    let type = (event && event.queryStringParameters) ? (TYPE[event.queryStringParameters.type || "NEW"] || "new-releases") : TYPE.NEW;
+    let type = (event && event.queryStringParameters) ? (TYPE[event.queryStringParameters.type || "NEW"] || "available") : TYPE.NEW;
     let key = `${platform}-${type}`;
 
     // Get the cache data, if any.

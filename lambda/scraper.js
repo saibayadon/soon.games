@@ -13,7 +13,7 @@ export const PLATFORMS = {
 };
 
 export const TYPE = {
-    "NEW": "new-releases",
+    "NEW": "available",
     "COMING_SOON": "coming-soon"
 };
 
