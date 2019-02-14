@@ -1,15 +1,11 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { Component } from 'react';
 
 class DocumentTitle extends Component {
-    render() {
-        document.title = this.props.title;
-        return null;
-    }
-};
-
-DocumentTitle.propTypes = {
-    title: PropTypes.string
-};
+  render() {
+    const { title } = this.props;
+    document.title = title;
+    return null;
+  }
+}
 
 export default DocumentTitle;

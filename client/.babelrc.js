@@ -1,11 +1,21 @@
 module.exports = {
-    presets: [
-        "@babel/preset-react",
-        ["@babel/preset-env", {
-            targets: { browsers: ["last 2 Chrome versions", "last 2 Firefox versions", "last 2 Safari versions"] },
-            useBuiltIns: 'usage',
-            forceAllTransforms: process.env.NODE_ENV === 'production'
-        }]
+  presets: [
+    '@babel/preset-react',
+    [
+      '@babel/preset-env',
+      {
+        targets: {
+          browsers: [
+            '>2%, last 1 edge version, last 2 safari version, not ie 11, not op_mini all',
+          ],
+        },
+        useBuiltIns: "usage"
+      },
     ],
-    "plugins": ["dynamic-import-webpack", "@babel/plugin-proposal-object-rest-spread"]
-}
+  ],
+  plugins: [
+    'dynamic-import-webpack',
+    'transform-class-properties',
+    '@babel/plugin-proposal-object-rest-spread',
+  ],
+};

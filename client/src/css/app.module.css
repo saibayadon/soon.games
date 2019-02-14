@@ -1,0 +1,179 @@
+@import 'normalize.css';
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:800');
+
+body {
+  padding: 2vh 2vw;
+  background: #fffffe;
+}
+@media screen and (max-width: 800px) {
+  body {
+    padding: 5%;
+  }
+}
+
+/* link style */
+a {
+  text-decoration: none;
+}
+
+a:hover,
+a:active,
+a.selected {
+  text-decoration: underline;
+}
+
+/* navigation styles */
+.navigation {
+  padding-top: 25px;
+  font-family: monospace;
+  font-weight: bold;
+}
+.navigation ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.navigation ul li {
+  display: inline-block;
+  margin: 0 4px;
+}
+@media screen and (max-width: 800px) {
+  .navigation {
+    font-size: 14px;
+  }
+  .navigation ul {
+    display: block;
+  }
+}
+
+/* error and loading and footer */
+p.error,
+p.loading,
+footer p {
+  margin: 6px 0;
+  padding: 4px 0;
+  font-family: monospace;
+  font-weight: bold;
+}
+p.error {
+  color: #e74c3c;
+}
+footer p,
+.wrapper footer a {
+  font-weight: normal;
+  color: #cfcfcf;
+}
+
+/* footer & wrapper */
+.wrapper {
+  display: flex;
+  min-height: calc(100vh - 4vh);
+  flex-direction: column;
+}
+.list {
+  flex: 1;
+}
+
+/* title styles */
+.title {
+  position: relative;
+  align-self: self-end;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 42px;
+
+  &::before {
+    position: absolute;
+    content: '';
+    bottom: 2px;
+    z-index: -1;
+    height: 0px;
+    width: 100%;
+  }
+}
+@media screen and (max-width: 800px) {
+  .title {
+    font-size: 24px;
+  }
+}
+
+/* list styles */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.list li {
+  margin: 6px 0;
+}
+@media screen and (max-width: 800px) {
+  .list li {
+    margin: 12px 0;
+  }
+  .game-title {
+    display: block;
+    margin-bottom: 5px;
+  }
+}
+/* highlight styles */
+.highlight {
+  display: inline-block;
+  padding: 4px;
+}
+
+/* link and orders colors */
+.ps4 a {
+  color: #3498db;
+}
+.ps4 .title::before {
+  border-bottom: 10px solid #3498db;
+}
+.ps4 .highlight {
+  background-color: #3498db;
+  color: white;
+}
+
+.xbone a {
+  color: #2ecc71;
+}
+.xbone .title::before {
+  border-bottom: 10px solid #2ecc71;
+}
+.xbone .highlight {
+  background-color: #2ecc71;
+}
+
+.switch a {
+  color: #e74c3c;
+}
+.switch .title::before {
+  border-bottom: 10px solid #e74c3c;
+}
+.switch .highlight {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.threeds a {
+  color: #c0392b;
+}
+.threeds .title::before {
+  border-bottom: 10px solid #c0392b;
+}
+.threeds .highlight {
+  background-color: #c0392b;
+  color: white;
+}
+
+.pc a {
+  color: #3d3d3d;
+}
+.pc .title::before {
+  border-bottom: 10px solid #3d3d3d;
+}
+.pc .highlight {
+  background-color: #3d3d3d;
+  color: white;
+}

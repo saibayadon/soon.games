@@ -1,16 +1,11 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 import axios, { CancelToken } from 'axios';
-import classNames from 'classNames';
+import classNames from 'classnames';
 import { parse, isBefore } from 'date-fns';
 
-// Actions Import
-import { updateItems, isLoading, hasError } from '../actions';
-
 // Styles Import
-import styles from '../css/app.css';
+import styles from '../css/app.module.css';
 
 // Components Imports
 import Nav from './Nav';
@@ -21,116 +16,133 @@ import DocumentTitle from './DocumentTitle';
 const API_URL = 'https://api.soon.games';
 
 export const PLATFORMS = {
-    'switch': 'SWITCH',
-    'ps4': 'PS4',
-    'pc': 'PC',
-    '3ds': '3DS',
-    'xbone': 'XBOX ONE X'
+  switch: 'SWITCH',
+  ps4: 'PS4',
+  pc: 'PC',
+  '3ds': '3DS',
+  xbone: 'XBOX ONE X',
 };
 
 export const TYPE = {
-    'new': 'RECENT RELEASES',
-    'coming_soon': 'COMING SOON'
+  new: 'RECENT RELEASES',
+  coming_soon: 'COMING SOON',
 };
 
-// ListContainer Component
-class ListContainer extends Component {
-    constructor(props) {
-        super();
+const ListContainer = props => {
+  const { match } = props;
+  const { platform, type } = match.params;
 
-        const { platform, type } = props.match.params;
-        const { items, isFetching, error } = props;
+  const [fetching, setFetching] = useState(false);
+  const [error, setError] = useState(null);
+  const [items, setItems] = useState([]);
+  const [cancelFetch, setCancelFetch] = useState({ source: () => {} });
+
+  // eslint-disable-next-line no-shadow
+  const fetchGameList = async (platform, type) => {
+    try {
+      if (fetching && cancelFetch) cancelFetch.source();
+
+      setFetching(true);
+      setItems([]);
+
+      const response = await axios.get(
+        `${API_URL}?platform=${platform.toUpperCase()}&type=${type.toUpperCase()}`,
+        {
+          cancelToken: new CancelToken(source => {
+            setCancelFetch({ source });
+          }),
+        },
+      );
+
+      let responseItems = response.data.sort((a, b) => a.date - b.date);
+
+      // Return only "old" games on the new releases section
+      if (type === 'new') {
+        responseItems = responseItems.filter(game => {
+          return isBefore(
+            parse(
+              game.date,
+              'X',
+              new Date().toLocaleString('en-US', {
+                timeZone: 'America/New_York',
+              }),
+            ),
+            new Date().toLocaleString('en-US', {
+              timeZone: 'America/New_York',
+            }),
+          );
+        });
+      }
+
+      setFetching(false);
+      setError(null);
+      setItems(type === 'new' ? responseItems.reverse() : responseItems);
+    } catch (e) {
+      if (axios.isCancel(e)) {
+        return;
+      }
+
+      setFetching(false);
+      setError(e);
+      setItems([]);
     }
+  };
 
-    componentDidMount() {
-        const { platform, type } = this.props.match.params;
+  useEffect(() => {
+    if (PLATFORMS[platform] && TYPE[type]) {
+      // Save route as default for subsequent visits.
+      window.localStorage.setItem('defaultRoute', `/${platform}/${type}`);
 
-        if (PLATFORMS.hasOwnProperty(platform) && TYPE.hasOwnProperty(type)) {
-            this.fetchGameList(platform, type);
-        }
+      // Fetch data.
+      fetchGameList(platform, type);
     }
+  }, [platform, type]);
 
-    componentDidUpdate(prevProps) {
-        const { dispatch } = prevProps;
-        const { platform: currentPlatform, type: currentType } = prevProps.match.params;
-        const { platform, type } = this.props.match.params;
+  const sectionInfo = `${PLATFORMS[platform]} - ${TYPE[type]}`;
 
-
-        if (platform !== currentPlatform || type !== currentType) {
-            // Save route as default for subsequent visits.
-            window.localStorage.setItem('defaultRoute', `/${platform}/${type}`);
-
-            // Re-fetch data.
-            if (PLATFORMS.hasOwnProperty(platform) && TYPE.hasOwnProperty(type)) {
-                this.fetchGameList(platform, type);
-            }
-        }
-    }
-
-    async fetchGameList(platform, type) {
-        try {
-            if (this.props.isFetching === true) {
-                const { platform, type } = this.props.match.params;
-                this.cancelFetch();
-            };
-
-            this.props.dispatch(isLoading());
-
-            const response = await axios.get(`${API_URL}?platform=${platform.toUpperCase()}&type=${type.toUpperCase()}`, {
-                cancelToken: new CancelToken((source) => { this.cancelFetch = source; })
-            });
-
-            let items = response.data.sort((a, b) => a.date - b.date);
-
-            // Return only "old" games on the new releases section
-            if (type === 'new') {
-                items = items.filter((game) => {
-                    return isBefore(parse(game.date, 'X', new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })), new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
-                });
-            };
-
-            this.props.dispatch(updateItems(type === 'new' ? items.reverse() : items));
-        } catch (e) {
-            if (axios.isCancel(e)) { return; }
-            this.props.dispatch(hasError(e));
-        }
-    }
-
-    render() {
-        const { items, isFetching, error } = this.props;
-        const { platform, type } = this.props.match.params;
-
-        const sectionInfo = `${PLATFORMS[platform]} - ${TYPE[type]}`;
-
-        return (
-            <div className={classNames(styles[platform.replace('3ds', 'threeds')], styles.wrapper)}>
-                <DocumentTitle title={sectionInfo} />
-                <Nav platforms={PLATFORMS} types={TYPE} />
-                <h1 className={styles.title}>{sectionInfo}</h1>
-                {isFetching ? <p className={styles.loading}> Loading... </p> : null}
-                {error ? <p className={styles.error}> Thank You Mario, But Our Princess is in Another Castle ({error.message}) </p> : null}
-                <List items={items} />
-                <footer>
-                    <p>all times shown are est - all information is scraped from <a target="_blank" href="http://metacritic.com">metacritic</a>.</p>
-                </footer>
-            </div>
-        );
-    }
+  return (
+    <div
+      className={classNames(
+        styles[platform.replace('3ds', 'threeds')],
+        styles.wrapper,
+      )}
+    >
+      <DocumentTitle title={sectionInfo} />
+      <Nav platforms={PLATFORMS} types={TYPE} />
+      <h1 className={styles.title}>{sectionInfo}</h1>
+      {fetching ? <p className={styles.loading}> Loading... </p> : null}
+      {error ? (
+        <p className={styles.error}>
+          {' '}
+          Thank You Mario, But Our Princess is in Another Castle (
+          {error.message}){' '}
+        </p>
+      ) : null}
+      <List items={items} />
+      <footer>
+        <p>
+          all times shown are est - all information is scraped from{' '}
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="http://metacritic.com"
+          >
+            metacritic
+          </a>
+          .
+          <br />
+          crafted in the warm winter of atx by{' '}
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="http://twitter.com/saibayadon"
+          >
+            @saibayadon
+          </a>
+        </p>
+      </footer>
+    </div>
+  );
 };
 
-// PropTypes
-ListContainer.propTypes = {
-    match: PropTypes.object,
-    items: PropTypes.array,
-    isFetching: PropTypes.bool,
-    error: PropTypes.object,
-    dispatch: PropTypes.func.isRequired
-};
-
-// Map Store State to Props
-const mapStoreToProps = state => {
-    return { items: state.items, isFetching: state.isFetching, error: state.error };
-};
-
-// Connect + Export
-export default connect(mapStoreToProps)(ListContainer);
+export default withRouter(ListContainer);
