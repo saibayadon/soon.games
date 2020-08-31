@@ -9,6 +9,16 @@ import ListItem from './ListItem';
 const List = props => {
   const { items } = props;
 
+  if (items.length === 0) {
+    return (
+      <ul className={styles.list}>
+        <li>
+          <p>no games found</p>
+        </li>
+      </ul>
+    );
+  }
+
   const itemsElements = items.map((item, index) => {
     return (
       <ListItem

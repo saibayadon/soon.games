@@ -23,7 +23,7 @@ export default class App extends Component {
           <Route
             component={() => (
               <Suspense
-                fallback={<p className={styles.loading}> Loading... </p>}
+                fallback={<p className={styles.loading}> loading... </p>}
               >
                 <LazyListContainer />
               </Suspense>

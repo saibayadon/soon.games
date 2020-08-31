@@ -125,45 +125,57 @@ footer p,
 
 /* link and orders colors */
 .ps4 a {
-  color: #3498db;
+  color: #006de0;
 }
 .ps4 .title::before {
-  border-bottom: 10px solid #3498db;
+  border-bottom: 10px solid #006de0;
 }
 .ps4 .highlight {
-  background-color: #3498db;
+  background-color: #006de0;
+  color: white;
+}
+
+.ps5 a {
+  color: #001eff;
+}
+.ps5 .title::before {
+  border-bottom: 10px solid #001eff;
+}
+.ps5 .highlight {
+  background-color: #001eff;
   color: white;
 }
 
 .xbone a {
-  color: #2ecc71;
+  color: #00842f;
 }
 .xbone .title::before {
-  border-bottom: 10px solid #2ecc71;
+  border-bottom: 10px solid #00842f;
 }
 .xbone .highlight {
-  background-color: #2ecc71;
-}
-
-.switch a {
-  color: #e74c3c;
-}
-.switch .title::before {
-  border-bottom: 10px solid #e74c3c;
-}
-.switch .highlight {
-  background-color: #e74c3c;
+  background-color: #00842f;
   color: white;
 }
 
-.threeds a {
-  color: #c0392b;
+.seriesx a {
+  color: #406b4f;
 }
-.threeds .title::before {
-  border-bottom: 10px solid #c0392b;
+.seriesx .title::before {
+  border-bottom: 10px solid #406b4f;
 }
-.threeds .highlight {
-  background-color: #c0392b;
+.seriesx .highlight {
+  background-color: #406b4f;
+  color: white;
+}
+
+.switch a {
+  color: #ea0000;
+}
+.switch .title::before {
+  border-bottom: 10px solid #ea0000;
+}
+.switch .highlight {
+  background-color: #ea0000;
   color: white;
 }
 

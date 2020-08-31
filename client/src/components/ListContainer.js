@@ -17,8 +17,8 @@ const API_URL = 'https://api.soon.games';
 
 export const PLATFORMS = {
   switch: 'SWITCH',
-  ps4: 'PS4',
   ps5: 'PS5',
+  ps4: 'PS4',
   pc: 'PC',
   xbone: 'XBOX ONE X',
   seriesx: 'XBOX SERIES X',
@@ -102,16 +102,14 @@ const ListContainer = props => {
   const sectionInfo = `${PLATFORMS[platform]} - ${TYPE[type]}`;
 
   return (
-    <div
-      className={classNames(
-        styles[platform.replace('3ds', 'threeds')],
-        styles.wrapper,
-      )}
-    >
+    <div className={classNames(styles[platform], styles.wrapper)}>
       <DocumentTitle title={sectionInfo} />
       <Nav platforms={PLATFORMS} types={TYPE} />
       <h1 className={styles.title}>{sectionInfo}</h1>
-      {fetching ? <p className={styles.loading}> Loading... </p> : null}
+      {fetching ? (
+        <p className={classNames(styles.loading, styles.list)}> loading... </p>
+      ) : null}
+      {fetching ? null : <List items={items} />}
       {error ? (
         <p className={styles.error}>
           {' '}
@@ -119,7 +117,6 @@ const ListContainer = props => {
           {error.message}){' '}
         </p>
       ) : null}
-      <List items={items} />
       <footer>
         <p>
           all times shown are est - all information is scraped from{' '}
