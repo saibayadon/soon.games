@@ -18,9 +18,10 @@ const API_URL = 'https://api.soon.games';
 export const PLATFORMS = {
   switch: 'SWITCH',
   ps4: 'PS4',
+  ps5: 'PS5',
   pc: 'PC',
-  '3ds': '3DS',
   xbone: 'XBOX ONE X',
+  seriesx: 'XBOX SERIES X',
 };
 
 export const TYPE = {

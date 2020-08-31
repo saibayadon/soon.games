@@ -7,9 +7,10 @@ import moment from 'moment';
 export const PLATFORMS = {
     "SWITCH": "switch",
     "PS4": "ps4",
+    "PS5": "ps5",
     "PC": "pc",
-    "3DS": "3ds",
-    "XBONE": "xboxone"
+    "XBONE": "xboxone",
+    "SERIESX": "xbox-series-x"
 };
 
 export const TYPE = {
