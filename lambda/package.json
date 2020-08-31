@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.190.0",
-    "axios": "^0.17.1",
+    "axios": "^0.18.1",
     "cheerio": "^1.0.0-rc.2",
     "moment": "^2.20.1"
   },
