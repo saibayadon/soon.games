@@ -29,7 +29,7 @@ const parseResponse = (response) => {
         const title = $(el).find('h3').text().trim();
 
         // Date
-        const date_str = $(el).find('.clamp-details span').eq(1).text();
+        const date_str = $(el).find('.clamp-details > span').text();
         const date = moment.utc(date_str, "MMM Do, YYYY").unix();
 
         // Game URL
