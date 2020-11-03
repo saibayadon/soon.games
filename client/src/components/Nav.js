@@ -5,11 +5,11 @@ import classNames from 'classnames';
 // Styles
 import styles from '../css/app.module.css';
 
-const Nav = props => {
+const Nav = (props) => {
   const { platforms, types, match } = props;
   const { platform, type } = match.params;
 
-  const platformLinks = Object.entries(platforms).map(item => {
+  const platformLinks = Object.entries(platforms).map((item) => {
     const isSelected = item[0].toLowerCase() === platform;
     return (
       <li key={item}>
@@ -23,7 +23,7 @@ const Nav = props => {
     );
   });
 
-  const typeLinks = Object.entries(types).map(item => {
+  const typeLinks = Object.entries(types).map((item) => {
     const isSelected = item[0].toLowerCase() === type;
     return (
       <li key={item}>

@@ -29,7 +29,7 @@ export const TYPE = {
   coming_soon: 'COMING SOON',
 };
 
-const ListContainer = props => {
+const ListContainer = (props) => {
   const { match } = props;
   const { platform, type } = match.params;
 
@@ -49,7 +49,7 @@ const ListContainer = props => {
       const response = await axios.get(
         `${API_URL}?platform=${platform.toUpperCase()}&type=${type.toUpperCase()}`,
         {
-          cancelToken: new CancelToken(source => {
+          cancelToken: new CancelToken((source) => {
             setCancelFetch({ source });
           }),
         },
@@ -59,7 +59,7 @@ const ListContainer = props => {
 
       // Return only "old" games on the new releases section
       if (type === 'new') {
-        responseItems = responseItems.filter(game => {
+        responseItems = responseItems.filter((game) => {
           return isBefore(
             parse(
               game.date,

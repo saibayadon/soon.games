@@ -4,7 +4,7 @@ import { parse, formatDistanceStrict, endOfDay } from 'date-fns';
 // Styles
 import styles from '../css/app.module.css';
 
-const ListItem = props => {
+const ListItem = (props) => {
   const { title, link, date } = props;
 
   const parsedDate = formatDistanceStrict(

@@ -6,7 +6,7 @@ import styles from '../css/app.module.css';
 // Components
 import ListItem from './ListItem';
 
-const List = props => {
+const List = (props) => {
   const { items } = props;
 
   if (items.length === 0) {

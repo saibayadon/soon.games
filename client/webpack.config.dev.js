@@ -1,6 +1,6 @@
-// Require
-const webpack = require('webpack');
+process.traceDeprecation = true;
 
+// Require
 const { resolve } = require('path');
 
 const buildPath = resolve(__dirname, 'build');
@@ -8,28 +8,22 @@ const mainPath = resolve(__dirname, 'src', 'index.js');
 
 // Webpack Plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const OfflinePlugin = require('offline-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
+const { WebpackPluginServe } = require('webpack-plugin-serve');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 const config = {
-  entry: [
-    'webpack-dev-server/client?http://localhost:8080/',
-    'webpack/hot/only-dev-server',
-    mainPath,
-  ],
+  mode: 'development',
+  entry: [mainPath, 'webpack-plugin-serve/client'],
   devtool: 'inline-source-map',
-  devServer: {
-    hot: true,
-    contentBase: resolve(__dirname, 'build'),
-    inline: true,
-    publicPath: '/',
-    port: 8080,
-    historyApiFallback: true,
-  },
   output: {
     path: buildPath,
+    publicPath: '/',
     filename: 'js/bundle.js',
     chunkFilename: 'js/[name].[chunkhash:8].chunk.js',
-    publicPath: '/',
+  },
+  optimization: {
+    chunkIds: 'named',
   },
   module: {
     rules: [
@@ -64,48 +58,40 @@ const config = {
         ],
       },
       {
-        enforce: 'pre',
-        test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'eslint-loader',
-      },
-      {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader',
       },
       {
         exclude: [/\.html$/, /\.(js|jsx)$/, /\.css$/, /\.json$/],
-        loader: 'url-loader',
-        options: {
-          name: 'assets/[hash:8].[ext]',
-        },
+        type: 'asset/inline',
       },
     ],
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
+    new WebpackPluginServe({
+      port: 3000,
+      static: buildPath,
+      historyFallback: true,
+    }),
+    new ESLintPlugin({
+      cache: true,
+      files: './src',
+    }),
     new HtmlWebpackPlugin({ inject: true, template: './public/index.html' }),
-    new OfflinePlugin({
-      appShell: '/',
-      externals: [
-        '/',
-        'https://api.soon.games/?platform=SWITCH&type=NEW',
-        'https://api.soon.games/?platform=SWITCH&type=NEW',
-        'https://api.soon.games/?platform=PS4&type=NEW',
-        'https://api.soon.games/?platform=PC&type=NEW',
-        'https://api.soon.games/?platform=3DS&type=NEW',
-        'https://api.soon.games/?platform=XBONE&type=NEW',
-        'https://api.soon.games/?platform=XBONE&type=COMING_SOON',
-        'https://api.soon.games/?platform=3DS&type=COMING_SOON',
-        'https://api.soon.games/?platform=PC&type=COMING_SOON',
-        'https://api.soon.games/?platform=PS4&type=COMING_SOON',
-        'https://api.soon.games/?platform=SWITCH&type=COMING_SOON'
+    new WorkboxPlugin.GenerateSW({
+      swDest: 'sw.js',
+      clientsClaim: true,
+      skipWaiting: true,
+      runtimeCaching: [
+        {
+          urlPattern: new RegExp('https://api.soon.games'),
+          handler: 'StaleWhileRevalidate',
+        },
       ],
-      responseStrategy: 'network-first'
     }),
   ],
+  watch: true,
 };
 
 module.exports = config;

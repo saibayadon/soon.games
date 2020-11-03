@@ -1,5 +1,4 @@
 // Require
-const webpack = require('webpack');
 const path = require('path');
 
 const buildPath = path.resolve(__dirname, 'build');
@@ -8,7 +7,7 @@ const mainPath = path.resolve(__dirname, 'src', 'index.js');
 // Webpack Plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OfflinePlugin = require('offline-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const config = {
@@ -59,11 +58,7 @@ const config = {
       },
       {
         exclude: [/\.html$/, /\.(js|jsx)$/, /\.css$/, /\.json$/],
-        loader: 'url-loader',
-        options: {
-          limit: 2000,
-          name: 'assets/[hash:8].[ext]',
-        },
+        type: 'asset/resource',
       },
     ],
   },
@@ -95,23 +90,16 @@ const config = {
       filename: 'css/[name].css',
       chunkFilename: 'css/[id].css',
     }),
-    new OfflinePlugin({
-      appShell: '/',
-      externals: [
-        '/',
-        'https://api.soon.games/?platform=SWITCH&type=NEW',
-        'https://api.soon.games/?platform=SWITCH&type=NEW',
-        'https://api.soon.games/?platform=PS4&type=NEW',
-        'https://api.soon.games/?platform=PC&type=NEW',
-        'https://api.soon.games/?platform=3DS&type=NEW',
-        'https://api.soon.games/?platform=XBONE&type=NEW',
-        'https://api.soon.games/?platform=XBONE&type=COMING_SOON',
-        'https://api.soon.games/?platform=3DS&type=COMING_SOON',
-        'https://api.soon.games/?platform=PC&type=COMING_SOON',
-        'https://api.soon.games/?platform=PS4&type=COMING_SOON',
-        'https://api.soon.games/?platform=SWITCH&type=COMING_SOON'
+    new WorkboxPlugin.GenerateSW({
+      swDest: 'sw.js',
+      clientsClaim: true,
+      skipWaiting: true,
+      runtimeCaching: [
+        {
+          urlPattern: new RegExp('https://api.soon.games'),
+          handler: 'StaleWhileRevalidate',
+        },
       ],
-      responseStrategy: 'network-first'
     }),
     new BundleAnalyzerPlugin(),
   ],
