@@ -85,6 +85,10 @@ const config = {
       skipWaiting: true,
       runtimeCaching: [
         {
+          urlPattern: new RegExp('http://localhost:3000'),
+          handler: 'StaleWhileRevalidate',
+        },
+        {
           urlPattern: new RegExp('https://api.soon.games'),
           handler: 'StaleWhileRevalidate',
         },
