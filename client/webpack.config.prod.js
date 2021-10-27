@@ -101,7 +101,7 @@ const config = {
         },
         {
           urlPattern: new RegExp('https://api.soon.games'),
-          handler: 'StaleWhileRevalidate',
+          handler: 'NetworkFirst',
         },
       ],
     }),
