@@ -10,10 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.784.0",
-    "axios": "^0.21.0",
-    "cheerio": "^1.0.0-rc.3",
-    "moment": "^2.29.1"
+    "aws-sdk": "^2.1498.0",
+    "axios": "^1.6.2",
+    "cheerio": "^1.0.0-rc.12",
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
