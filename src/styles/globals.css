@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --nintendo-switch: #ea0000;
+  --xbox: #00842f;
+  --ps5: #001eff;
+  --pc: #3d3d3d;
+  --selected-color: var(--nintendo-switch);
+}
+
+.nintendo-switch {
+  --selected-color: var(--nintendo-switch);
+}
+
+.xbox-series-x {
+  --selected-color: var(--xbox);
+}
+
+.ps5 {
+  --selected-color: var(--ps5);
+}
+
+.pc {
+  --selected-color: var(--pc);
+}
+
+.headline-underline::before {
+  bottom: 0;
+  border-bottom: solid 15px;
+  border-color: var(--selected-color);
+  content: ' ';
+  position: absolute;
+  width: 100%;
+  z-index: -1;
+}

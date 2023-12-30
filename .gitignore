@@ -1,14 +1,9 @@
-# dependencies
-client/node_modules
-lambda/node_modules
-
-# production
-client/build
-lambda/dist
-
-# misc
+node_modules
+bun.lockb
+.next
 .DS_Store
 .env
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+node_modules
