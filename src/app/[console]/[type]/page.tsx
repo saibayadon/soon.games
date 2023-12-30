@@ -2,6 +2,9 @@ import Link from "next/link";
 import { Consoles, Types } from "~/data/constants";
 import { fetchGames } from "./actions";
 
+export const dynamic = "force-static";
+export const revalidate = 60 * 60 * 12;
+
 export default async function ListPage({
   params,
 }: {
