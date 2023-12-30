@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { CONSOLES, TYPES } from "~/data/constants";
 
+export const dynamic = "force-dynamic";
+
 export default function HomePage() {
   const selectedConsole =
     cookies().get("selectedConsole")?.value || "nintendo-switch";
