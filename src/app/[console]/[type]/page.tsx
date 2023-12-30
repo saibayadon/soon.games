@@ -1,9 +1,6 @@
 import Link from "next/link";
-import { Consoles, Types } from "~/data/constants";
+import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
 import { fetchGames } from "./actions";
-
-export const dynamic = "force-static";
-export const revalidate = 60 * 60 * 12;
 
 export default async function ListPage({
   params,
@@ -59,4 +56,23 @@ export default async function ListPage({
       })}
     </ul>
   );
+}
+
+export const revalidate = 60 * 60 * 12; // Revalidate once per day.
+export const dynamicParams = false; // Don't care for other paths.
+
+// Generate params from constants.
+export async function generateStaticParams() {
+  const params: Array<{ console: string; type: string }> = [];
+
+  Object.keys(CONSOLES).forEach((console) => {
+    Object.keys(TYPES).forEach((type) => {
+      params.push({
+        console,
+        type,
+      });
+    });
+  });
+
+  return params;
 }

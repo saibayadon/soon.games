@@ -1,5 +1,7 @@
+"use client";
 import Link from "next/link";
 import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
+import { setCookies } from "./actions";
 
 export default function Navigation({
   selectedConsole,
@@ -22,6 +24,9 @@ export default function Navigation({
                     selectedConsole === key ? "underline" : ""
                   }`}
                   href={`/${key}/${selectedType}`}
+                  onClick={() => {
+                    setCookies(key as Consoles, selectedType);
+                  }}
                 >
                   {c}
                 </Link>
@@ -42,6 +47,9 @@ export default function Navigation({
                     selectedType === key ? "underline" : ""
                   }`}
                   href={`/${selectedConsole}/${key}`}
+                  onClick={() => {
+                    setCookies(selectedConsole, key as Types);
+                  }}
                 >
                   {t}
                 </Link>
