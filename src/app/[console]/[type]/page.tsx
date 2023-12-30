@@ -14,7 +14,6 @@ export default async function ListPage({
   const selectedType = params.type;
 
   const games = await fetchGames(selectedConsole, selectedType);
-  // const games = await new Promise((res, rej) => {});
 
   if (games.length === 0) {
     return (
@@ -58,5 +57,3 @@ export default async function ListPage({
     </ul>
   );
 }
-
-export const revalidate = 3600;
