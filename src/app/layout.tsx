@@ -1,5 +1,6 @@
 import "~/styles/globals.css";
 import Script from "next/script";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { Space_Mono } from "next/font/google";
 
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${space.className}`}>{children}</body>
+      <SpeedInsights />
       <Script strategy="lazyOnload">
         {`
           // De-register old SW.

@@ -66,7 +66,7 @@ export const fetchGames = async (
     if (TYPES[t] === TYPES.coming_soon)
       METACRITIC_URL = `https://www.metacritic.com/browse/game/${c}/all/all-time/new/?platform=${c}&releaseType=coming-soon&page=${page}`;
     const response = await fetch(METACRITIC_URL, {
-      next: { revalidate: 60 * 60 * 12 }, // Revalidate after 1 day.
+      next: { revalidate: 60 * 60 * 6 }, // Revalidate after 6 hours.
     });
     const data = await parseResponse(response);
     if (page === 1 && data.length === 0) return []; // Bail if first page is empty. Metacritic is down?
