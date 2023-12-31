@@ -70,12 +70,14 @@ export const fetchGames = async (
     });
     const data = await parseResponse(response);
     if (page === 1 && data.length === 0) return []; // Bail if first page is empty. Metacritic is down?
-    if (page === 5) return data; // Return all data after 5 pages.
+    if (page === 5) return data; // Return games after 5 pages.
     return data.concat(await fetchData(page + 1)); // Recursive fetch.
   }
 
   try {
-    return await fetchData();
+    const games = await fetchData();
+    // Filter duplicates
+    return [...new Map(games.map((game) => [game.id, game])).values()];
   } catch (e) {
     console.log(e);
     return [];

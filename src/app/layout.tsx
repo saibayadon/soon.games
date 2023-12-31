@@ -21,8 +21,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${space.className}`}>{children}</body>
-      <SpeedInsights />
+      <body className={`${space.className}`}>
+        {children}
+        <SpeedInsights />
+      </body>
       <Script strategy="lazyOnload">
         {`
           // De-register old SW.

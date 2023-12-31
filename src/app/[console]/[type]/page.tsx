@@ -58,7 +58,7 @@ export default async function ListPage({
   );
 }
 
-export const revalidate = 60 * 60 * 6; // Revalidate once per 6-hours.
+export const revalidate = 60 * 60 * 6; // Revalidate once per 6 hours.
 export const dynamicParams = false; // Don't care for other paths.
 
 // Generate params from constants.
