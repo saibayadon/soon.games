@@ -2,14 +2,15 @@ import Link from "next/link";
 import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
 import { fetchGames } from "./actions";
 
-export default async function ListPage({
-  params,
-}: {
-  params: {
-    console: Consoles;
-    type: Types;
-  };
-}) {
+export default async function ListPage(
+  props: {
+    params: Promise<{
+      console: Consoles;
+      type: Types;
+    }>;
+  }
+) {
+  const params = await props.params;
   const selectedConsole = params.console;
   const selectedType = params.type;
 

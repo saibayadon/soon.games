@@ -14,8 +14,8 @@ type GameData = {
 
 // Set a cookie whenever a console or a type is clicked. This will be used to persist the selection for future visits.
 export const setCookies = async (c: Consoles, t: Types) => {
-  cookies().set("selectedConsole", c);
-  cookies().set("selectedType", t);
+  (await cookies()).set("selectedConsole", c);
+  (await cookies()).set("selectedType", t);
 };
 
 // Fetch data from metacritic

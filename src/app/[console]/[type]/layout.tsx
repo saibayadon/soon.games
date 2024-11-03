@@ -2,16 +2,21 @@ import { redirect } from "next/navigation";
 import Navigation from "./navigation";
 import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
 
-export default function ListLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: {
-    console: Consoles;
-    type: Types;
-  };
-}) {
+export default async function ListLayout(
+  props: {
+    children: React.ReactNode;
+    params: Promise<{
+      console: Consoles;
+      type: Types;
+    }>;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const selectedConsole = params.console;
   const selectedType = params.type;
 
