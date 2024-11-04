@@ -2,20 +2,16 @@ import { redirect } from "next/navigation";
 import Navigation from "./navigation";
 import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
 
-export default async function ListLayout(
-  props: {
-    children: React.ReactNode;
-    params: Promise<{
-      console: Consoles;
-      type: Types;
-    }>;
-  }
-) {
+export default async function ListLayout(props: {
+  children: React.ReactNode;
+  params: Promise<{
+    console: Consoles;
+    type: Types;
+  }>;
+}) {
   const params = await props.params;
 
-  const {
-    children
-  } = props;
+  const { children } = props;
 
   const selectedConsole = params.console;
   const selectedType = params.type;
@@ -36,9 +32,11 @@ export default async function ListLayout(
       />
       <section className="my-4 flex-1">{children}</section>
       <footer className="pb-4 text-xs font-bold text-gray-500">
-        <p>all information is scraped from metacritic.</p>
-        <p>crafted in the melting summer of buenos aires by @saibayadon</p>
-        <p>31/12/2023</p>
+        <p>all information is sourced from igdb.</p>
+        <p>
+          crafted in the melting summer of buenos aires and updated in the cold
+          fall of munich. by @saibayadon.
+        </p>
       </footer>
     </main>
   );

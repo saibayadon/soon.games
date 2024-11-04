@@ -5,6 +5,13 @@ export const CONSOLES = {
   pc: "pc",
 } as const;
 
+export const CONSOLE_ID = {
+  [CONSOLES["nintendo-switch"]]: 130,
+  [CONSOLES.ps5]: 167,
+  [CONSOLES["xbox-series-x"]]: 169,
+  [CONSOLES.pc]: 6,
+};
+
 export type Consoles = keyof typeof CONSOLES;
 
 export const TYPES = {

@@ -11,15 +11,17 @@
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.7.1",
-    "@vercel/speed-insights": "^1.0.2",
+    "@vercel/speed-insights": "1.0.5-beta.1",
+    "caniuse-lite": "^1.0.30001677",
     "cheerio": "^1.0.0-rc.12",
-    "next": "15.0.2",
-    "react": "19.0.0-rc-02c0e824-20241028",
-    "react-dom": "19.0.0-rc-02c0e824-20241028",
+    "igdb-api-node": "^5.0.2",
+    "next": "15.0.3-canary.4",
+    "react": "19.0.0-rc-603e6108-20241029",
+    "react-dom": "19.0.0-rc-603e6108-20241029",
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "15.0.2",
+    "@next/eslint-plugin-next": "15.0.3-canary.4",
     "@types/eslint": "^8.44.7",
     "@types/node": "^18.17.0",
     "@types/react": "npm:types-react@19.0.0-rc.1",
