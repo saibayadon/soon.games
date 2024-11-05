@@ -1,3 +1,5 @@
+"use cache";
+import { unstable_cacheLife as cacheLife } from "next/cache";
 import Link from "next/link";
 import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
 import { GameData, fetchGamesIGDB } from "./actions";
@@ -45,6 +47,7 @@ export default async function ListPage(props: {
     type: Types;
   }>;
 }) {
+  cacheLife("hours");
   const params = await props.params;
   const selectedConsole = params.console;
   const selectedType = params.type;
