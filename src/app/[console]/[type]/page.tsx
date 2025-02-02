@@ -68,7 +68,7 @@ export default async function ListPage(props: {
         return (
           <li key={game.id}>
             {game.name}
-            <span className="peer relative mx-2 text-[--selected-color]">
+            <span className="peer relative mx-2 text-(--selected-color)">
               <Link
                 className="hover:underline"
                 rel="external"
@@ -78,7 +78,7 @@ export default async function ListPage(props: {
                 info
               </Link>
             </span>
-            <span className="text-[--selected-color]">
+            <span className="text-(--selected-color)">
               {game.videos ? "/ " : ""}
               {getVideoLinks(game)}
             </span>
@@ -89,7 +89,7 @@ export default async function ListPage(props: {
                 alt={game.name}
               />
             ) : null}
-            <span className="inline-block rounded bg-[--selected-color] px-3 py-1 text-xs text-white">
+            <span className="inline-block rounded-sm bg-(--selected-color) px-3 py-1 text-xs text-white">
               {dateToRelative(game.first_release_date)}
             </span>
           </li>

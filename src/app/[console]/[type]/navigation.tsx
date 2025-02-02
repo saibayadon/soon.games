@@ -14,7 +14,7 @@ export default function Navigation({
     <nav className="flex flex-col flex-wrap text-sm font-bold">
       <div>
         <span className="mr-2 inline-block text-black">platform:</span>
-        <ul className="inline-block text-[--selected-color]">
+        <ul className="inline-block text-(--selected-color)">
           {Object.keys(CONSOLES).map((key) => {
             const c = CONSOLES[key as Consoles];
             return (
@@ -37,7 +37,7 @@ export default function Navigation({
       </div>
       <div>
         <span className="mr-2 inline-block text-black">type:</span>
-        <ul className="inline-block text-[--selected-color]">
+        <ul className="inline-block text-(--selected-color)">
           {Object.keys(TYPES).map((key) => {
             const t = TYPES[key as Types];
             return (
