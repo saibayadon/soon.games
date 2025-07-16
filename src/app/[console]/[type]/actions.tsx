@@ -38,7 +38,7 @@ const generateQuery = (c: Consoles, t: Types): string => {
 
   const sort = t === "coming_soon" ? "asc" : "desc";
 
-  const platform = CONSOLE_ID[CONSOLES[c]] || CONSOLE_ID["switch"];
+  const platform = CONSOLE_ID[CONSOLES[c]] || CONSOLE_ID["switch 2"];
   return `fields *, cover.url, release_dates.date, videos.video_id, websites.url; where platforms = [${platform}] ${release_date}; sort first_release_date ${sort}; limit 200;`;
 };
 
