@@ -1,58 +1,39 @@
-"use cache";
-import { unstable_cacheLife as cacheLife } from "next/cache";
-import Link from "next/link";
-import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
-import { GameData, fetchGamesIGDB } from "./actions";
+import { cacheLife, cacheTag } from "next/cache";
+import { Consoles, Types, CONSOLES, TYPES } from "~/data/constants";
+import { fetchGames } from "./actions";
+import { GameListItem } from "./components/GameListItem";
+import { dateToRelative } from "~/lib/utils/date";
 
-const getVideoLinks = (game: GameData) => {
-  return game.videos?.map((video, index: number) => {
-    return (
-      <Link
-        className="mr-2 hover:underline"
-        rel="external"
-        target="_blank"
-        href={`https://youtu.be/${video.video_id}`}
-        key={video.video_id}
-      >
-        video {index}
-      </Link>
-    );
-  });
-};
+// Generate static params for all console/type combinations
+// This tells Next.js to prerender these routes at build time
+export function generateStaticParams() {
+  const consoles = Object.keys(CONSOLES) as Consoles[];
+  const types = Object.keys(TYPES) as Types[];
 
-const dateToRelative = (date?: number): string => {
-  if (date === undefined) return "";
-  const now = Math.floor(Date.now() / 1000);
-  const diff = date - now;
-  const days = Math.floor(diff / (60 * 60 * 24));
-
-  if (Math.abs(days) < 1) {
-    const hours = Math.floor(Math.abs(diff) / (60 * 60));
-    if (hours === 0) return "today";
-
-    if (diff > 0) {
-      return `in ${hours} hour${hours !== 1 ? "s" : ""}`;
-    } else {
-      return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
-    }
-  }
-
-  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
-  return rtf.format(days, "day");
-};
+  return consoles.flatMap((console) =>
+    types.map((type) => ({
+      console,
+      type,
+    })),
+  );
+}
 
 export default async function ListPage(props: {
   params: Promise<{
-    console: Consoles;
-    type: Types;
+    console: string;
+    type: string;
   }>;
 }) {
-  cacheLife("hours");
-  const params = await props.params;
-  const selectedConsole = params.console;
-  const selectedType = params.type;
+  "use cache";
 
-  const games = await fetchGamesIGDB(selectedConsole, selectedType);
+  const params = await props.params;
+  const selectedConsole = params.console as Consoles;
+  const selectedType = params.type as Types;
+
+  cacheLife("hours");
+  cacheTag(`list-${selectedConsole}-${selectedType}`);
+
+  const games = await fetchGames(selectedConsole, selectedType);
 
   if (games.length === 0) {
     return (
@@ -64,53 +45,13 @@ export default async function ListPage(props: {
 
   return (
     <ul className="space-y-2 text-sm font-bold">
-      {games.map((game) => {
-        return (
-          <li key={game.id}>
-            {game.name}
-            <span className="peer relative mx-2 text-(--selected-color)">
-              <Link
-                className="hover:underline"
-                rel="external"
-                target="_blank"
-                href={game.url || "#"}
-              >
-                info
-              </Link>
-            </span>
-            <span className="text-(--selected-color)">
-              {game.videos ? "/ " : ""}
-              {getVideoLinks(game)}
-            </span>
-            {game.cover ? (
-              <img
-                className="absolute opacity-0 transition-opacity delay-100 peer-hover:opacity-100"
-                src={game.cover?.url}
-                alt={game.name}
-              />
-            ) : null}
-            <span className="inline-block rounded-sm bg-(--selected-color) px-3 py-1 text-xs text-white">
-              {dateToRelative(game.first_release_date)}
-            </span>
-          </li>
-        );
-      })}
+      {games.map((game) => (
+        <GameListItem
+          key={game.id}
+          game={game}
+          relativeDate={dateToRelative(game.first_release_date)}
+        />
+      ))}
     </ul>
   );
-}
-
-// Generate params from constants.
-export async function generateStaticParams() {
-  const params: Array<{ console: string; type: string }> = [];
-
-  Object.keys(CONSOLES).forEach((console) => {
-    Object.keys(TYPES).forEach((type) => {
-      params.push({
-        console,
-        type,
-      });
-    });
-  });
-
-  return params;
 }

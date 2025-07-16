@@ -1,3 +1,3 @@
 # soon.games
 
-source code for https://soon.games. built with next 14.
+source code for <https://soon.games>. built with next

@@ -1,5 +1,3 @@
-"use cache";
-import { unstable_cacheLife as cacheLife } from "next/cache";
 import { redirect } from "next/navigation";
 import Navigation from "./navigation";
 import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
@@ -7,22 +5,20 @@ import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
 export default async function ListLayout(props: {
   children: React.ReactNode;
   params: Promise<{
-    console: Consoles;
-    type: Types;
+    console: string;
+    type: string;
   }>;
 }) {
-  cacheLife("hours");
   const params = await props.params;
-
   const { children } = props;
 
-  const selectedConsole = params.console;
-  const selectedType = params.type;
-
   // Validate URL - or go back to the root
-  if (!(selectedConsole in CONSOLES) || !(selectedType in TYPES)) {
+  if (!(params.console in CONSOLES) || !(params.type in TYPES)) {
     redirect("/");
   }
+
+  const selectedConsole = params.console as Consoles;
+  const selectedType = params.type as Types;
 
   return (
     <main className={`flex flex-col p-8 ${selectedConsole} h-dvh`}>

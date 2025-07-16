@@ -1,10 +1,10 @@
 export default function Loading() {
   const widths = ["w-20", "w-52", "w-32", "w-28", "w-40"];
   return (
-    <ul className="my-[-6px]">
+    <ul className="-my-1.5">
       {Array(50)
         .fill("")
-        .map((val, index) => {
+        .map((_, index) => {
           return (
             <li
               key={index}
