@@ -1,5 +1,5 @@
 "use cache";
-import { unstable_cacheLife as cacheLife } from "next/cache";
+import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
 import { GameData, fetchGamesIGDB } from "./actions";
@@ -43,14 +43,14 @@ const dateToRelative = (date?: number): string => {
 
 export default async function ListPage(props: {
   params: Promise<{
-    console: Consoles;
-    type: Types;
+    console: string;
+    type: string;
   }>;
 }) {
   cacheLife("hours");
   const params = await props.params;
-  const selectedConsole = params.console;
-  const selectedType = params.type;
+  const selectedConsole = params.console as Consoles;
+  const selectedType = params.type as Types;
 
   const games = await fetchGamesIGDB(selectedConsole, selectedType);
 

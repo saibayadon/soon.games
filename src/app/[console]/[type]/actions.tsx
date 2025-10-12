@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { unstable_cacheLife as cacheLife } from "next/cache";
+import { cacheLife } from "next/cache";
 import { CONSOLES, CONSOLE_ID, Consoles, Types } from "~/data/constants";
 
 export type GameData = {
