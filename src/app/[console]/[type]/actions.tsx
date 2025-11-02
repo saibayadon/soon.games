@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { cacheLife } from "next/cache";
 import { CONSOLES, CONSOLE_ID, Consoles, Types } from "~/data/constants";
 
 export type GameData = {
@@ -46,6 +47,8 @@ export const fetchGamesIGDB = async (
   c: Consoles,
   t: Types,
 ): Promise<GameData[]> => {
+  "use cache";
+  cacheLife("hours");
   try {
     const token = await fetchIGDBToken();
 

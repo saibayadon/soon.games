@@ -1,3 +1,5 @@
+"use cache";
+import { cacheLife } from "next/cache";
 import { redirect } from "next/navigation";
 import Navigation from "./navigation";
 import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
@@ -9,6 +11,7 @@ export default async function ListLayout(props: {
     type: string;
   }>;
 }) {
+  cacheLife("hours");
   const params = await props.params;
 
   const { children } = props;

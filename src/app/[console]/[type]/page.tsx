@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { cacheLife } from "next/cache";
 import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
 import { GameData, fetchGamesIGDB } from "./actions";
 import Loading from "./loading";
@@ -49,6 +50,9 @@ async function GamesList({
   selectedConsole: Consoles;
   selectedType: Types;
 }) {
+  "use cache";
+  cacheLife("hours");
+
   const games = await fetchGamesIGDB(selectedConsole, selectedType);
 
   if (games.length === 0) {
