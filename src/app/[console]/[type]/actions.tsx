@@ -1,7 +1,6 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { cacheLife } from "next/cache";
 import { CONSOLES, CONSOLE_ID, Consoles, Types } from "~/data/constants";
 
 export type GameData = {
@@ -47,9 +46,6 @@ export const fetchGamesIGDB = async (
   c: Consoles,
   t: Types,
 ): Promise<GameData[]> => {
-  "use cache";
-  cacheLife("hours");
-
   try {
     const token = await fetchIGDBToken();
 
@@ -60,16 +56,29 @@ export const fetchGamesIGDB = async (
       Authorization: `Bearer ${token}`,
     };
 
-    const games = await fetch(GAMES_URL, {
+    const response = await fetch(GAMES_URL, {
       body: generateQuery(c, t),
       headers,
       method: "POST",
-    }).then((res) => res.json());
+    });
 
-    if (games.length >= 0) return games;
+    if (!response.ok) {
+      console.error(
+        `IGDB API error: ${response.status} ${response.statusText}`,
+      );
+      return [];
+    }
+
+    const games = await response.json();
+
+    // Handle IGDB API error responses
+    if (games && games.length >= 0) {
+      return games;
+    }
 
     return [];
   } catch (e) {
+    console.error("Error fetching games from IGDB:", e);
     return [];
   }
 };

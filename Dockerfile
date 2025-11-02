@@ -16,6 +16,17 @@ RUN bun install --frozen-lockfile
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+
+# Declare build arguments
+ARG IGDB_CLIENT
+ARG IGDB_SECRET
+ARG NODE_ENV=production
+
+# Convert build args to environment variables for the build process
+ENV IGDB_CLIENT=$IGDB_CLIENT
+ENV IGDB_SECRET=$IGDB_SECRET
+ENV NODE_ENV=$NODE_ENV
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
