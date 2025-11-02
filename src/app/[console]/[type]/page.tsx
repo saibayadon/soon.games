@@ -1,8 +1,9 @@
-"use cache";
-import { cacheLife } from "next/cache";
+import { Suspense } from "react";
 import Link from "next/link";
+import { cacheLife } from "next/cache";
 import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
 import { GameData, fetchGamesIGDB } from "./actions";
+import Loading from "./loading";
 
 const getVideoLinks = (game: GameData) => {
   return game.videos?.map((video, index: number) => {
@@ -41,16 +42,16 @@ const dateToRelative = (date?: number): string => {
   return rtf.format(days, "day");
 };
 
-export default async function ListPage(props: {
-  params: Promise<{
-    console: string;
-    type: string;
-  }>;
+// Separate component for the game list that handles data fetching
+async function GamesList({
+  selectedConsole,
+  selectedType,
+}: {
+  selectedConsole: Consoles;
+  selectedType: Types;
 }) {
+  "use cache";
   cacheLife("hours");
-  const params = await props.params;
-  const selectedConsole = params.console as Consoles;
-  const selectedType = params.type as Types;
 
   const games = await fetchGamesIGDB(selectedConsole, selectedType);
 
@@ -96,6 +97,26 @@ export default async function ListPage(props: {
         );
       })}
     </ul>
+  );
+}
+
+export default async function ListPage(props: {
+  params: Promise<{
+    console: string;
+    type: string;
+  }>;
+}) {
+  const params = await props.params;
+  const selectedConsole = params.console as Consoles;
+  const selectedType = params.type as Types;
+
+  return (
+    <Suspense fallback={<Loading />}>
+      <GamesList
+        selectedConsole={selectedConsole}
+        selectedType={selectedType}
+      />
+    </Suspense>
   );
 }
 

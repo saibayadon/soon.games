@@ -7,7 +7,7 @@
     "build": "next build",
     "dev": "next dev --turbopack",
     "lint": "next lint",
-    "start": "next start"
+    "start": "bun .next/standalone/server.js"
   },
   "engines": {
     "node": ">=22.0.0"
