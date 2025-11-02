@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
-import { setCookies } from "./actions";
 
 export default function Navigation({
   selectedConsole,
@@ -10,6 +9,12 @@ export default function Navigation({
   selectedConsole: Consoles;
   selectedType: Types;
 }) {
+  const setPreferenceCookies = (console: Consoles, type: Types) => {
+    // Set cookies client-side to avoid server action POST and revalidation
+    document.cookie = `selectedConsole=${console}; path=/; max-age=31536000; SameSite=Lax`;
+    document.cookie = `selectedType=${type}; path=/; max-age=31536000; SameSite=Lax`;
+  };
+
   return (
     <nav className="flex flex-col flex-wrap text-sm font-bold">
       <div>
@@ -23,9 +28,10 @@ export default function Navigation({
                   className={`hover:underline ${
                     selectedConsole === key ? "underline" : ""
                   }`}
+                  prefetch={true}
                   href={`/${key}/${selectedType}`}
                   onClick={() => {
-                    setCookies(key as Consoles, selectedType);
+                    setPreferenceCookies(key as Consoles, selectedType);
                   }}
                 >
                   {c}
@@ -46,9 +52,10 @@ export default function Navigation({
                   className={`hover:underline ${
                     selectedType === key ? "underline" : ""
                   }`}
+                  prefetch={true}
                   href={`/${selectedConsole}/${key}`}
                   onClick={() => {
-                    setCookies(selectedConsole, key as Types);
+                    setPreferenceCookies(selectedConsole, key as Types);
                   }}
                 >
                   {t}

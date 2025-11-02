@@ -7,7 +7,7 @@
     "build": "next build",
     "dev": "next dev --turbopack",
     "lint": "next lint",
-    "start": "bun .next/standalone/server.js"
+    "start": "cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/ && bun .next/standalone/server.js"
   },
   "engines": {
     "node": ">=22.0.0"
