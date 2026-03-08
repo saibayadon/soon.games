@@ -1,4 +1,18 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 export default function Loading() {
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  if (!isHydrated) {
+    return null;
+  }
+
   const widths = ["w-20", "w-52", "w-32", "w-28", "w-40"];
   return (
     <ul className="-my-1.5">

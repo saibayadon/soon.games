@@ -15,8 +15,8 @@ const config = {
   cacheComponents: true,
   experimental: {
     staleTimes: {
-      dynamic: 3600, // Cache dynamic pages for 1 hour (3600 seconds)
-      static: 3600, // Cache static pages for 1 hour (3600 seconds)
+      dynamic: 21600,
+      static: 21600,
     },
   },
   turbopack: {

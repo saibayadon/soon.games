@@ -4,6 +4,8 @@ import { fetchGames } from "./actions";
 import { GameListItem } from "./components/GameListItem";
 import { dateToRelative } from "~/lib/utils/date";
 
+const SIX_HOURS_IN_SECONDS = 6 * 60 * 60;
+
 // Generate static params for all console/type combinations
 // This tells Next.js to prerender these routes at build time
 export function generateStaticParams() {
@@ -18,19 +20,20 @@ export function generateStaticParams() {
   );
 }
 
-export default async function ListPage(props: {
-  params: Promise<{
-    console: string;
-    type: string;
-  }>;
+async function CachedGameList({
+  selectedConsole,
+  selectedType,
+}: {
+  selectedConsole: Consoles;
+  selectedType: Types;
 }) {
   "use cache";
 
-  const params = await props.params;
-  const selectedConsole = params.console as Consoles;
-  const selectedType = params.type as Types;
-
-  cacheLife("hours");
+  cacheLife({
+    stale: SIX_HOURS_IN_SECONDS,
+    revalidate: SIX_HOURS_IN_SECONDS,
+    expire: SIX_HOURS_IN_SECONDS + 60,
+  });
   cacheTag(`list-${selectedConsole}-${selectedType}`);
 
   const games = await fetchGames(selectedConsole, selectedType);
@@ -53,5 +56,23 @@ export default async function ListPage(props: {
         />
       ))}
     </ul>
+  );
+}
+
+export default async function ListPage(props: {
+  params: Promise<{
+    console: string;
+    type: string;
+  }>;
+}) {
+  const params = await props.params;
+  const selectedConsole = params.console as Consoles;
+  const selectedType = params.type as Types;
+
+  return (
+    <CachedGameList
+      selectedConsole={selectedConsole}
+      selectedType={selectedType}
+    />
   );
 }
