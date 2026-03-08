@@ -1,8 +1,10 @@
 import { cacheLife, cacheTag } from "next/cache";
+import { Suspense } from "react";
 import { Consoles, Types, CONSOLES, TYPES } from "~/data/constants";
 import { fetchGames } from "./actions";
 import { GameListItem } from "./components/GameListItem";
 import { dateToRelative } from "~/lib/utils/date";
+import Loading from "./loading";
 
 const SIX_HOURS_IN_SECONDS = 6 * 60 * 60;
 
@@ -20,7 +22,7 @@ export function generateStaticParams() {
   );
 }
 
-async function CachedGameList({
+async function GamesList({
   selectedConsole,
   selectedType,
 }: {
@@ -29,11 +31,7 @@ async function CachedGameList({
 }) {
   "use cache";
 
-  cacheLife({
-    stale: SIX_HOURS_IN_SECONDS,
-    revalidate: SIX_HOURS_IN_SECONDS,
-    expire: SIX_HOURS_IN_SECONDS + 60,
-  });
+  cacheLife("hours");
   cacheTag(`list-${selectedConsole}-${selectedType}`);
 
   const games = await fetchGames(selectedConsole, selectedType);
@@ -70,9 +68,12 @@ export default async function ListPage(props: {
   const selectedType = params.type as Types;
 
   return (
-    <CachedGameList
-      selectedConsole={selectedConsole}
-      selectedType={selectedType}
-    />
+    <Suspense fallback={<Loading />}>
+      <GamesList
+        key={`${selectedConsole}-${selectedType}`}
+        selectedConsole={selectedConsole}
+        selectedType={selectedType}
+      />
+    </Suspense>
   );
 }

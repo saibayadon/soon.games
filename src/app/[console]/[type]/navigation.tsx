@@ -27,7 +27,7 @@ export default function Navigation({
                   className={`hover:underline ${
                     selectedConsole === key ? "underline" : ""
                   }`}
-                  prefetch={true}
+                  prefetch="auto"
                   href={`/${key}/${selectedType}`}
                   onClick={() => {
                     setPreferenceCookies(key as Consoles, selectedType);
@@ -51,7 +51,7 @@ export default function Navigation({
                   className={`hover:underline ${
                     selectedType === key ? "underline" : ""
                   }`}
-                  prefetch={true}
+                  prefetch="auto"
                   href={`/${selectedConsole}/${key}`}
                   onClick={() => {
                     setPreferenceCookies(selectedConsole, key as Types);
