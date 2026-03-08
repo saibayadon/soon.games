@@ -2,22 +2,27 @@
 
 import { cacheLife, cacheTag } from "next/cache";
 import { Consoles, Types } from "~/data/constants";
-import { fetchGamesIGDB, GameData } from "~/lib/igdb/client";
+import { fetchGamesIGDB } from "~/lib/igdb/client";
+import type { GameData } from "~/lib/igdb/client";
 
-export type { GameData };
+const SIX_HOURS_IN_SECONDS = 6 * 60 * 60;
 
 /**
  * Server action for fetching games from IGDB with caching
- * This provides an additional caching layer on top of fetch-level caching
- * The timestamp is passed as a parameter to make it part of the cache key
+ * This provides a 6-hour cache window for each console/type pair
  */
 export const fetchGames = async (
   c: Consoles,
   t: Types,
-  currentTime: number = Math.floor(Date.now() / 1000),
 ): Promise<GameData[]> => {
   "use cache";
-  cacheLife("hours");
+
+  cacheLife({
+    stale: SIX_HOURS_IN_SECONDS,
+    revalidate: SIX_HOURS_IN_SECONDS,
+    expire: SIX_HOURS_IN_SECONDS + 60,
+  });
   cacheTag(`igdb-${c}-${t}`);
-  return fetchGamesIGDB(c, t, currentTime);
+
+  return fetchGamesIGDB(c, t);
 };
