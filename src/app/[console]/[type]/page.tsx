@@ -6,6 +6,8 @@ import { GameListItem } from "./components/GameListItem";
 import { dateToRelative } from "~/lib/utils/date";
 import Loading from "./loading";
 
+const SIX_HOURS_IN_SECONDS = 6 * 60 * 60;
+
 // Generate static params for all console/type combinations
 // This tells Next.js to prerender these routes at build time
 export function generateStaticParams() {
