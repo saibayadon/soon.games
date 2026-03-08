@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
 
 export default function Navigation({
@@ -9,9 +10,15 @@ export default function Navigation({
   selectedConsole: Consoles;
   selectedType: Types;
 }) {
+  const router = useRouter();
+
   const setPreferenceCookies = (console: Consoles, type: Types) => {
     document.cookie = `selectedConsole=${console}; path=/; max-age=31536000; SameSite=Lax`;
     document.cookie = `selectedType=${type}; path=/; max-age=31536000; SameSite=Lax`;
+  };
+
+  const prefetchOnHover = (href: string) => {
+    router.prefetch(href);
   };
 
   return (
@@ -27,8 +34,14 @@ export default function Navigation({
                   className={`hover:underline ${
                     selectedConsole === key ? "underline" : ""
                   }`}
-                  prefetch={true}
+                  prefetch={false}
                   href={`/${key}/${selectedType}`}
+                  onMouseEnter={() => {
+                    prefetchOnHover(`/${key}/${selectedType}`);
+                  }}
+                  onFocus={() => {
+                    prefetchOnHover(`/${key}/${selectedType}`);
+                  }}
                   onClick={() => {
                     setPreferenceCookies(key as Consoles, selectedType);
                   }}
@@ -51,8 +64,14 @@ export default function Navigation({
                   className={`hover:underline ${
                     selectedType === key ? "underline" : ""
                   }`}
-                  prefetch={true}
+                  prefetch={false}
                   href={`/${selectedConsole}/${key}`}
+                  onMouseEnter={() => {
+                    prefetchOnHover(`/${selectedConsole}/${key}`);
+                  }}
+                  onFocus={() => {
+                    prefetchOnHover(`/${selectedConsole}/${key}`);
+                  }}
                   onClick={() => {
                     setPreferenceCookies(selectedConsole, key as Types);
                   }}

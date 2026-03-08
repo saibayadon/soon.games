@@ -1,8 +1,10 @@
 import { cacheLife, cacheTag } from "next/cache";
+import { Suspense } from "react";
 import { Consoles, Types, CONSOLES, TYPES } from "~/data/constants";
 import { fetchGames } from "./actions";
 import { GameListItem } from "./components/GameListItem";
 import { dateToRelative } from "~/lib/utils/date";
+import Loading from "./loading";
 
 // Generate static params for all console/type combinations
 // This tells Next.js to prerender these routes at build time
@@ -18,17 +20,14 @@ export function generateStaticParams() {
   );
 }
 
-export default async function ListPage(props: {
-  params: Promise<{
-    console: string;
-    type: string;
-  }>;
+async function GamesList({
+  selectedConsole,
+  selectedType,
+}: {
+  selectedConsole: Consoles;
+  selectedType: Types;
 }) {
   "use cache";
-
-  const params = await props.params;
-  const selectedConsole = params.console as Consoles;
-  const selectedType = params.type as Types;
 
   cacheLife("hours");
   cacheTag(`list-${selectedConsole}-${selectedType}`);
@@ -53,5 +52,26 @@ export default async function ListPage(props: {
         />
       ))}
     </ul>
+  );
+}
+
+export default async function ListPage(props: {
+  params: Promise<{
+    console: string;
+    type: string;
+  }>;
+}) {
+  const params = await props.params;
+  const selectedConsole = params.console as Consoles;
+  const selectedType = params.type as Types;
+
+  return (
+    <Suspense fallback={<Loading />}>
+      <GamesList
+        key={`${selectedConsole}-${selectedType}`}
+        selectedConsole={selectedConsole}
+        selectedType={selectedType}
+      />
+    </Suspense>
   );
 }
