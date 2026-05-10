@@ -7,8 +7,8 @@ export async function GET(request: NextRequest) {
   const path = searchParams.get("path");
 
   if (tag) {
-    // Revalidate specific cache tag (e.g., /revalidate?tag=games-ps5-new)
-    revalidateTag(tag, "hours");
+    // Mark matching entries stale and refresh them on the next request.
+    revalidateTag(tag, "max");
     return Response.json({ revalidated: true, tag, now: Date.now() });
   }
 

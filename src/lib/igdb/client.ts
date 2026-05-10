@@ -1,4 +1,5 @@
 import { Consoles, Types, CONSOLES, CONSOLE_ID } from "~/data/constants";
+import { ONE_DAY_IN_SECONDS } from "~/lib/cache";
 
 export type GameData = {
   id: number;
@@ -19,6 +20,10 @@ export const fetchIGDBToken = async (): Promise<string> => {
 
   const response = await fetch(URL, {
     method: "POST",
+    next: {
+      revalidate: ONE_DAY_IN_SECONDS,
+      tags: ["igdb-token"],
+    },
   });
 
   if (!response.ok) {
@@ -79,6 +84,10 @@ export const fetchGamesIGDB = async (
       body: generateQuery(c, t, currentTime),
       headers,
       method: "POST",
+      next: {
+        revalidate: ONE_DAY_IN_SECONDS,
+        tags: [`igdb-${c}-${t}`],
+      },
     });
 
     if (!response.ok) {

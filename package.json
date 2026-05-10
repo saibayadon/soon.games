@@ -13,37 +13,37 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "@t3-oss/env-nextjs": "^0.12.0",
-    "@tailwindcss/postcss": "^4.1.11",
-    "@types/node": "^22.16.4",
-    "@types/react": "19.0.2",
-    "@types/react-dom": "19.0.2",
-    "caniuse-lite": "^1.0.30001727",
-    "cheerio": "^1.1.0",
+    "@t3-oss/env-nextjs": "^0.13.11",
+    "@tailwindcss/postcss": "^4.3.0",
+    "@types/node": "^25.6.2",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "caniuse-lite": "^1.0.30001792",
+    "cheerio": "^1.2.0",
     "i": "^0.3.7",
-    "igdb-api-node": "^5.0.2",
-    "next": "16.1.6",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "typescript": "^5.8.3",
-    "zod": "^3.25.76"
+    "igdb-api-node": "^6.0.5",
+    "next": "16.2.6",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "typescript": "^6.0.3",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "16.1.6",
-    "@types/eslint": "^8.56.12",
-    "@typescript-eslint/eslint-plugin": "^8.37.0",
-    "@typescript-eslint/parser": "^8.37.0",
-    "eslint": "^9.31.0",
-    "postcss": "^8.5.6",
-    "prettier": "^3.6.2",
-    "prettier-plugin-tailwindcss": "^0.6.14",
-    "tailwindcss": "^4.1.11"
+    "@next/eslint-plugin-next": "16.2.6",
+    "@types/eslint": "^9.6.1",
+    "@typescript-eslint/eslint-plugin": "^8.59.2",
+    "@typescript-eslint/parser": "^8.59.2",
+    "eslint": "^10.3.0",
+    "postcss": "^8.5.14",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.8.0",
+    "tailwindcss": "^4.3.0"
   },
   "ct3aMetadata": {
     "initVersion": "7.25.0"
   },
   "overrides": {
-    "@types/react": "19.0.2",
-    "@types/react-dom": "19.0.2"
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3"
   }
 }

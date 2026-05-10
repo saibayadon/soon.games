@@ -4,9 +4,8 @@ import { Consoles, Types, CONSOLES, TYPES } from "~/data/constants";
 import { fetchGames } from "./actions";
 import { GameListItem } from "./components/GameListItem";
 import { dateToRelative } from "~/lib/utils/date";
+import { ONE_DAY_CACHE_LIFE } from "~/lib/cache";
 import Loading from "./loading";
-
-const SIX_HOURS_IN_SECONDS = 6 * 60 * 60;
 
 // Generate static params for all console/type combinations
 // This tells Next.js to prerender these routes at build time
@@ -31,7 +30,7 @@ async function GamesList({
 }) {
   "use cache";
 
-  cacheLife("hours");
+  cacheLife(ONE_DAY_CACHE_LIFE);
   cacheTag(`list-${selectedConsole}-${selectedType}`);
 
   const games = await fetchGames(selectedConsole, selectedType);

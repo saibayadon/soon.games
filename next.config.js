@@ -15,11 +15,12 @@ const config = {
   cacheComponents: true,
   experimental: {
     staleTimes: {
-      dynamic: 21600,
-      static: 21600,
+      dynamic: 86400,
+      static: 86400,
     },
   },
   turbopack: {
+    root: __dirname,
     resolveAlias: {
       "~": "./src",
     },
