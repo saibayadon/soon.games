@@ -13,10 +13,16 @@ const __dirname = path.dirname(__filename);
 /** @type {import("next").NextConfig} */
 const config = {
   cacheComponents: true,
+  cacheLife: {
+    games: {
+      stale: 5 * 60, // 5 minutes
+      revalidate: 60 * 60, // 1 hour
+    },
+  },
   experimental: {
     staleTimes: {
-      dynamic: 86400,
-      static: 86400,
+      dynamic: 5 * 60,
+      static: 5 * 60,
     },
   },
   turbopack: {

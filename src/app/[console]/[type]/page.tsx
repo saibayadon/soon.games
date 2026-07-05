@@ -4,7 +4,6 @@ import { Consoles, Types, CONSOLES, TYPES } from "~/data/constants";
 import { fetchGames } from "./actions";
 import { GameListItem } from "./components/GameListItem";
 import { dateToRelative } from "~/lib/utils/date";
-import { ONE_DAY_CACHE_LIFE } from "~/lib/cache";
 import Loading from "./loading";
 
 // Generate static params for all console/type combinations
@@ -30,8 +29,8 @@ async function GamesList({
 }) {
   "use cache";
 
-  cacheLife(ONE_DAY_CACHE_LIFE);
-  cacheTag(`list-${selectedConsole}-${selectedType}`);
+  cacheLife("games");
+  cacheTag(`games-${selectedConsole}-${selectedType}`);
 
   const games = await fetchGames(selectedConsole, selectedType);
 

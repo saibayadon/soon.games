@@ -1,5 +1,5 @@
+import { cacheLife, cacheTag } from "next/cache";
 import { Consoles, Types, CONSOLES, CONSOLE_ID } from "~/data/constants";
-import { ONE_DAY_IN_SECONDS } from "~/lib/cache";
 
 export type GameData = {
   id: number;
@@ -13,17 +13,26 @@ export type GameData = {
 };
 
 /**
- * Fetches the API Token for IGDB from Twitch OAuth
+ * Fetches the API Token for IGDB from Twitch OAuth.
+ * Cached for 1 hour via "use cache" to avoid repeated OAuth calls.
  */
 export const fetchIGDBToken = async (): Promise<string> => {
-  const URL = `https://id.twitch.tv/oauth2/token?client_id=${process.env.IGDB_CLIENT}&client_secret=${process.env.IGDB_SECRET}&grant_type=client_credentials`;
+  "use cache";
+  cacheLife({
+    stale: 5 * 60, // 5 minutes
+    revalidate: 60 * 60, // 1 hour
+  });
+  cacheTag("igdb-token");
 
-  const response = await fetch(URL, {
+  const response = await fetch("https://id.twitch.tv/oauth2/token", {
+    body: new URLSearchParams({
+      client_id: process.env.IGDB_CLIENT || "",
+      client_secret: process.env.IGDB_SECRET || "",
+      grant_type: "client_credentials",
+    }),
+    cache: "no-store",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
     method: "POST",
-    next: {
-      revalidate: ONE_DAY_IN_SECONDS,
-      tags: ["igdb-token"],
-    },
   });
 
   if (!response.ok) {
@@ -33,7 +42,7 @@ export const fetchIGDBToken = async (): Promise<string> => {
   }
 
   const { access_token } = await response.json();
-  return access_token;
+  return access_token as string;
 };
 
 /**
@@ -59,7 +68,8 @@ export const generateQuery = (
 };
 
 /**
- * Fetches the list of games for a given console and type from IGDB API
+ * Fetches the list of games for a given console and type from IGDB API.
+ * Throws on any upstream failure so that SWR preserves stale cached HTML.
  * @param c Console to fetch games for
  * @param t Type of games (new or coming_soon)
  * @param currentTime Optional current Unix timestamp in seconds. Defaults to Date.now()
@@ -70,43 +80,24 @@ export const fetchGamesIGDB = async (
   t: Types,
   currentTime: number = Math.floor(Date.now() / 1000),
 ): Promise<GameData[]> => {
-  try {
-    const token = await fetchIGDBToken();
+  const token = await fetchIGDBToken();
 
-    const GAMES_URL = `https://api.igdb.com/v4/games`;
-
-    const headers = {
+  const response = await fetch("https://api.igdb.com/v4/games", {
+    body: generateQuery(c, t, currentTime),
+    cache: "no-store",
+    headers: {
       "Client-ID": process.env.IGDB_CLIENT || "",
       Authorization: `Bearer ${token}`,
-    };
+    },
+    method: "POST",
+  });
 
-    const response = await fetch(GAMES_URL, {
-      body: generateQuery(c, t, currentTime),
-      headers,
-      method: "POST",
-      next: {
-        revalidate: ONE_DAY_IN_SECONDS,
-        tags: [`igdb-${c}-${t}`],
-      },
-    });
-
-    if (!response.ok) {
-      console.error(
-        `IGDB API error: ${response.status} ${response.statusText}`,
-      );
-      return [];
-    }
-
-    const games = await response.json();
-
-    // Handle IGDB API error responses
-    if (Array.isArray(games) && games.length >= 0) {
-      return games;
-    }
-
-    return [];
-  } catch (e) {
-    console.error("Error fetching games from IGDB:", e);
-    return [];
+  if (!response.ok) {
+    throw new Error(
+      `IGDB API error: ${response.status} ${response.statusText}`,
+    );
   }
+
+  const games = await response.json();
+  return Array.isArray(games) ? (games as GameData[]) : [];
 };
