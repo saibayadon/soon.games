@@ -1,16 +1,21 @@
 import { cacheLife, cacheTag } from "next/cache";
+import { env } from "~/env.js";
 import { Consoles, Types, CONSOLES, CONSOLE_ID } from "~/data/constants";
 
+/** Only the fields we request in `generateQuery` (see `IGDB_FIELDS`). */
 export type GameData = {
   id: number;
   name: string;
-  aggregated_rating: number;
+  url: string;
   first_release_date?: number;
   cover?: { id: number; url: string };
   videos?: { id: number; video_id: string }[];
-  url: string;
-  websites?: { id: number; url: string }[];
 };
+
+// Keep this in sync with `GameData`. Asking for `*` returns every field IGDB
+// has (summary, storyline, ratings, ...) for up to 200 games.
+const IGDB_FIELDS =
+  "id, name, url, first_release_date, cover.url, videos.video_id";
 
 /**
  * Fetches the API Token for IGDB from Twitch OAuth.
@@ -26,8 +31,8 @@ export const fetchIGDBToken = async (): Promise<string> => {
 
   const response = await fetch("https://id.twitch.tv/oauth2/token", {
     body: new URLSearchParams({
-      client_id: process.env.IGDB_CLIENT || "",
-      client_secret: process.env.IGDB_SECRET || "",
+      client_id: env.IGDB_CLIENT,
+      client_secret: env.IGDB_SECRET,
       grant_type: "client_credentials",
     }),
     cache: "no-store",
@@ -64,7 +69,7 @@ export const generateQuery = (
   const sort = t === "coming_soon" ? "asc" : "desc";
 
   const platform = CONSOLE_ID[CONSOLES[c]] || CONSOLE_ID["switch 2"];
-  return `fields *, cover.url, release_dates.date, videos.video_id, websites.url; where platforms = [${platform}] ${release_date}; sort first_release_date ${sort}; limit 200;`;
+  return `fields ${IGDB_FIELDS}; where platforms = [${platform}] ${release_date}; sort first_release_date ${sort}; limit 200;`;
 };
 
 /**
@@ -86,7 +91,7 @@ export const fetchGamesIGDB = async (
     body: generateQuery(c, t, currentTime),
     cache: "no-store",
     headers: {
-      "Client-ID": process.env.IGDB_CLIENT || "",
+      "Client-ID": env.IGDB_CLIENT,
       Authorization: `Bearer ${token}`,
     },
     method: "POST",

@@ -1,10 +1,21 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { cacheLife, cacheTag } from "next/cache";
 import { Suspense } from "react";
-import { Consoles, Types, CONSOLES, TYPES } from "~/data/constants";
-import { fetchGames } from "./actions";
+import {
+  Consoles,
+  Types,
+  CONSOLES,
+  TYPES,
+  isConsole,
+  isType,
+} from "~/data/constants";
+import { fetchGamesIGDB } from "~/lib/igdb/client";
 import { GameListItem } from "./components/GameListItem";
+import { GamesSkeleton } from "./components/GamesSkeleton";
 import { dateToRelative } from "~/lib/utils/date";
-import Loading from "./loading";
+
+type PageParams = Promise<{ console: string; type: string }>;
 
 // Generate static params for all console/type combinations
 // This tells Next.js to prerender these routes at build time
@@ -20,6 +31,15 @@ export function generateStaticParams() {
   );
 }
 
+export async function generateMetadata(props: {
+  params: PageParams;
+}): Promise<Metadata> {
+  const { console: selectedConsole, type: selectedType } = await props.params;
+  if (!isConsole(selectedConsole) || !isType(selectedType)) return {};
+
+  return { title: `${TYPES[selectedType]} · ${CONSOLES[selectedConsole]}` };
+}
+
 async function GamesList({
   selectedConsole,
   selectedType,
@@ -32,12 +52,12 @@ async function GamesList({
   cacheLife("games");
   cacheTag(`games-${selectedConsole}-${selectedType}`);
 
-  const games = await fetchGames(selectedConsole, selectedType);
+  const games = await fetchGamesIGDB(selectedConsole, selectedType);
 
   if (games.length === 0) {
     return (
       <p className="space-y-2 text-sm font-bold">
-        i'm sorry mario, but your results are in another castle.
+        i&apos;m sorry mario, but your results are in another castle.
       </p>
     );
   }
@@ -55,20 +75,18 @@ async function GamesList({
   );
 }
 
-export default async function ListPage(props: {
-  params: Promise<{
-    console: string;
-    type: string;
-  }>;
-}) {
-  const params = await props.params;
-  const selectedConsole = params.console as Consoles;
-  const selectedType = params.type as Types;
+export default async function ListPage(props: { params: PageParams }) {
+  const { console: selectedConsole, type: selectedType } = await props.params;
+
+  // Layouts don't re-run on every navigation, so validate here too: this is
+  // what stops arbitrary URLs from creating cache entries / IGDB requests.
+  if (!isConsole(selectedConsole) || !isType(selectedType)) {
+    notFound();
+  }
 
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<GamesSkeleton />}>
       <GamesList
-        key={`${selectedConsole}-${selectedType}`}
         selectedConsole={selectedConsole}
         selectedType={selectedType}
       />

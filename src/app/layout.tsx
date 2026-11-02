@@ -1,8 +1,7 @@
 import "~/styles/globals.css";
 
 import { Space_Mono } from "next/font/google";
-import { Suspense } from "react";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 const space = Space_Mono({
   weight: "400",
@@ -12,7 +11,10 @@ const space = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "soon.games",
+  title: {
+    default: "soon.games",
+    template: "%s | soon.games",
+  },
   description: "soon.games - what's dropping today?",
 };
 
@@ -22,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${space.className}`}>{children} </body>
+    <html lang="en" className={space.variable}>
+      <body>{children}</body>
     </html>
   );
 }

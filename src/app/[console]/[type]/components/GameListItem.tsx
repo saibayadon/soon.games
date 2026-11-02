@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { GameData } from "~/lib/igdb/client";
+import type { GameData } from "~/lib/igdb/client";
+import { RelativeDate } from "./RelativeDate";
 import { VideoLinks } from "./VideoLinks";
 
 interface GameListItemProps {
@@ -12,31 +12,39 @@ interface GameListItemProps {
  */
 export function GameListItem({ game, relativeDate }: GameListItemProps) {
   return (
-    <li key={game.id}>
+    <li>
       {game.name}
       <span className="peer relative mx-2 text-(--selected-color)">
-        <Link
+        <a
           className="hover:underline"
-          rel="external"
+          rel="external noopener noreferrer"
           target="_blank"
           href={game.url || "#"}
         >
           info
-        </Link>
+        </a>
       </span>
       <span className="text-(--selected-color)">
         {game.videos ? "/ " : ""}
         <VideoLinks videos={game.videos} />
       </span>
       {game.cover ? (
+        // Hover preview: `hidden` + lazy means the browser doesn't fetch the
+        // image until the row is hovered (it never intersects while display:none).
+        // eslint-disable-next-line @next/next/no-img-element
         <img
-          className="absolute opacity-0 transition-opacity delay-100 peer-hover:opacity-100"
-          src={game.cover?.url}
+          className="absolute hidden transition-opacity delay-100 peer-hover:block starting:peer-hover:opacity-0"
+          src={game.cover.url}
           alt={game.name}
+          loading="lazy"
+          decoding="async"
         />
       ) : null}
       <span className="inline-block rounded-sm bg-(--selected-color) px-3 py-1 text-xs text-white">
-        {relativeDate}
+        <RelativeDate
+          timestamp={game.first_release_date}
+          initialLabel={relativeDate}
+        />
       </span>
     </li>
   );
