@@ -20,3 +20,10 @@ export const TYPES = {
 } as const;
 
 export type Types = keyof typeof TYPES;
+
+// Not `in`: it would match inherited keys like "constructor".
+export const isConsole = (value: string): value is Consoles =>
+  Object.hasOwn(CONSOLES, value);
+
+export const isType = (value: string): value is Types =>
+  Object.hasOwn(TYPES, value);

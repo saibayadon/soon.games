@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 type Video = {
   id: number;
   video_id: string;
@@ -20,15 +18,15 @@ export function VideoLinks({ videos }: VideoLinksProps) {
   return (
     <>
       {videos.map((video, index) => (
-        <Link
+        <a
           className="mr-2 hover:underline"
-          rel="external"
+          rel="external noopener noreferrer"
           target="_blank"
           href={`https://youtu.be/${video.video_id}`}
           key={video.video_id}
         >
           video {index}
-        </Link>
+        </a>
       ))}
     </>
   );

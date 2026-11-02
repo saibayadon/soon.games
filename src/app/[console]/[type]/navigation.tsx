@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useEffect } from "react";
 import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
 
 export default function Navigation({
@@ -9,10 +10,11 @@ export default function Navigation({
   selectedConsole: Consoles;
   selectedType: Types;
 }) {
-  const setPreferenceCookies = (console: Consoles, type: Types) => {
-    document.cookie = `selectedConsole=${console}; path=/; max-age=31536000; SameSite=Lax`;
-    document.cookie = `selectedType=${type}; path=/; max-age=31536000; SameSite=Lax`;
-  };
+  // Remembered for the "/" redirect.
+  useEffect(() => {
+    document.cookie = `selectedConsole=${selectedConsole}; path=/; max-age=31536000; SameSite=Lax`;
+    document.cookie = `selectedType=${selectedType}; path=/; max-age=31536000; SameSite=Lax`;
+  }, [selectedConsole, selectedType]);
 
   return (
     <nav className="flex flex-col flex-wrap text-sm font-bold">
@@ -27,11 +29,8 @@ export default function Navigation({
                   className={`hover:underline ${
                     selectedConsole === key ? "underline" : ""
                   }`}
-                  prefetch="auto"
+                  prefetch={selectedConsole !== key}
                   href={`/${key}/${selectedType}`}
-                  onClick={() => {
-                    setPreferenceCookies(key as Consoles, selectedType);
-                  }}
                 >
                   {c}
                 </Link>
@@ -51,11 +50,8 @@ export default function Navigation({
                   className={`hover:underline ${
                     selectedType === key ? "underline" : ""
                   }`}
-                  prefetch="auto"
+                  prefetch={selectedType !== key}
                   href={`/${selectedConsole}/${key}`}
-                  onClick={() => {
-                    setPreferenceCookies(selectedConsole, key as Types);
-                  }}
                 >
                   {t}
                 </Link>

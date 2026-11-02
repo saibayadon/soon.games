@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Navigation from "./navigation";
-import { CONSOLES, Consoles, TYPES, Types } from "~/data/constants";
+import { isConsole, isType } from "~/data/constants";
 
 export default async function ListLayout(props: {
   children: React.ReactNode;
@@ -13,12 +13,10 @@ export default async function ListLayout(props: {
   const { children } = props;
 
   // Validate URL - or go back to the root
-  if (!(params.console in CONSOLES) || !(params.type in TYPES)) {
+  const { console: selectedConsole, type: selectedType } = params;
+  if (!isConsole(selectedConsole) || !isType(selectedType)) {
     redirect("/");
   }
-
-  const selectedConsole = params.console as Consoles;
-  const selectedType = params.type as Types;
 
   return (
     <main className={`flex flex-col p-8 ${selectedConsole} h-dvh`}>
