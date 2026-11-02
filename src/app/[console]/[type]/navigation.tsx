@@ -10,8 +10,7 @@ export default function Navigation({
   selectedConsole: Consoles;
   selectedType: Types;
 }) {
-  // Remember the last viewed list for the "/" redirect. Done on view rather
-  // than on click, so direct visits and back/forward navigation count too.
+  // Remembered for the "/" redirect.
   useEffect(() => {
     document.cookie = `selectedConsole=${selectedConsole}; path=/; max-age=31536000; SameSite=Lax`;
     document.cookie = `selectedType=${selectedType}; path=/; max-age=31536000; SameSite=Lax`;
@@ -30,8 +29,6 @@ export default function Navigation({
                   className={`hover:underline ${
                     selectedConsole === key ? "underline" : ""
                   }`}
-                  // Resolve the cached list for this exact URL ahead of the
-                  // click. Skip the page we're already on.
                   prefetch={selectedConsole !== key}
                   href={`/${key}/${selectedType}`}
                 >

@@ -7,13 +7,9 @@ const WIDTHS = ["w-20", "w-52", "w-32", "w-28", "w-40"];
 const subscribe = () => () => {};
 
 /**
- * Placeholder rows shown while a games list is being rendered.
- *
- * It renders nothing during SSR and hydration: the cached list is streamed in
- * right behind the static shell, so showing the skeleton there would only
- * flash. On client-side navigations it mounts straight to the client snapshot,
- * so the skeleton appears immediately. (It's a client component so the 50 rows
- * stay out of the RSC payload of every route.)
+ * Renders nothing during SSR/hydration (the cached list streams in right
+ * behind the shell, so the skeleton would only flash); shows immediately on
+ * client navigations.
  */
 export function GamesSkeleton() {
   const isClient = useSyncExternalStore(

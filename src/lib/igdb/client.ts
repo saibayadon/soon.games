@@ -2,7 +2,6 @@ import { cacheLife, cacheTag } from "next/cache";
 import { env } from "~/env.js";
 import { Consoles, Types, CONSOLES, CONSOLE_ID } from "~/data/constants";
 
-/** Only the fields we request in `generateQuery` (see `IGDB_FIELDS`). */
 export type GameData = {
   id: number;
   name: string;
@@ -12,8 +11,7 @@ export type GameData = {
   videos?: { id: number; video_id: string }[];
 };
 
-// Keep this in sync with `GameData`. Asking for `*` returns every field IGDB
-// has (summary, storyline, ratings, ...) for up to 200 games.
+// Keep in sync with `GameData`.
 const IGDB_FIELDS =
   "id, name, url, first_release_date, cover.url, videos.video_id";
 

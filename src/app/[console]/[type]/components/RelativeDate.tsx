@@ -3,7 +3,6 @@
 import { useSyncExternalStore } from "react";
 import { dateToRelative } from "~/lib/utils/date";
 
-// One shared ticker for every mounted <RelativeDate />, instead of a timer each.
 const listeners = new Set<() => void>();
 let timer: ReturnType<typeof setInterval> | undefined;
 
@@ -23,12 +22,8 @@ function subscribe(listener: () => void) {
 }
 
 /**
- * Renders a release date relative to *now*.
- *
- * The page is served from the cache, so `initialLabel` was computed when the
- * cache entry was filled and can be arbitrarily old. It is used for the server
- * HTML and for hydration (no mismatch), then the label is recomputed on the
- * client and kept fresh.
+ * `initialLabel` comes from the cached render and may be stale. It is used for
+ * SSR and hydration, then the label is recomputed on the client.
  */
 export function RelativeDate({
   timestamp,

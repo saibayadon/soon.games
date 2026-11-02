@@ -29,8 +29,7 @@ export function GameListItem({ game, relativeDate }: GameListItemProps) {
         <VideoLinks videos={game.videos} />
       </span>
       {game.cover ? (
-        // Hover preview: `hidden` + lazy means the browser doesn't fetch the
-        // image until the row is hovered (it never intersects while display:none).
+        // hidden + lazy: the image isn't fetched until the row is hovered
         // eslint-disable-next-line @next/next/no-img-element
         <img
           className="absolute hidden transition-opacity delay-100 peer-hover:block starting:peer-hover:opacity-0"

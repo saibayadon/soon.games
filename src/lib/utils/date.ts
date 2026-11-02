@@ -7,8 +7,7 @@ export const dateToRelative = (date?: number): string => {
   if (date === undefined) return "";
   const now = Math.floor(Date.now() / 1000);
   const diff = date - now;
-  // Truncate toward zero so "less than a day away" is 0 on both sides of now
-  // (Math.floor would turn "2 hours ago" into -1 day, i.e. "yesterday").
+  // trunc, not floor: floor turns "2 hours ago" into -1 day ("yesterday")
   const days = Math.trunc(diff / (60 * 60 * 24));
 
   if (days === 0) {

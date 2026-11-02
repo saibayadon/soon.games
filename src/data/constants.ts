@@ -21,8 +21,7 @@ export const TYPES = {
 
 export type Types = keyof typeof TYPES;
 
-// `Object.hasOwn` rather than `in`, so inherited keys like "constructor" or
-// "toString" are not mistaken for real consoles/types.
+// Not `in`: it would match inherited keys like "constructor".
 export const isConsole = (value: string): value is Consoles =>
   Object.hasOwn(CONSOLES, value);
 

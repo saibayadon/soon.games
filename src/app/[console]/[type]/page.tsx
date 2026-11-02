@@ -78,8 +78,7 @@ async function GamesList({
 export default async function ListPage(props: { params: PageParams }) {
   const { console: selectedConsole, type: selectedType } = await props.params;
 
-  // Layouts don't re-run on every navigation, so validate here too: this is
-  // what stops arbitrary URLs from creating cache entries / IGDB requests.
+  // Layouts don't re-run on every navigation, so validate here too.
   if (!isConsole(selectedConsole) || !isType(selectedType)) {
     notFound();
   }
